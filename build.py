@@ -88,6 +88,9 @@ nav.scrolled{{background:rgba(247,243,238,.92);-webkit-backdrop-filter:blur(20px
 .loop-track span em{{font-style:normal;opacity:.5}}span.loop-icon{{font-size:16px;opacity:.6}}
 @keyframes ticker{{from{{transform:translateX(0)}}to{{transform:translateX(-50%)}}}}
 
+/* ─── DECORATIVE SERIF ELEMENTS ─── */
+.serif-bg{{position:absolute;font-family:'Instrument Serif',serif;font-size:clamp(120px,20vw,300px);font-weight:900;color:rgba(151,78,142,.03);line-height:1;pointer-events:none;user-select:none;z-index:0;top:0;right:0;transform:translate(10%,-20%)}}
+
 /* ─── SECTIONS ─── */
 section{{padding:100px 24px;max-width:1100px;margin:0 auto;position:relative}}
 .section-label{{font-size:11px;font-weight:500;letter-spacing:3px;color:var(--purple);margin-bottom:10px;opacity:0;text-transform:uppercase}}
@@ -95,15 +98,11 @@ section{{padding:100px 24px;max-width:1100px;margin:0 auto;position:relative}}
 .section-title .gt{{background:linear-gradient(135deg,#974e8e,#d49acb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
 .section-desc{{font-size:15px;color:var(--text-dim);max-width:560px;margin-bottom:48px;line-height:1.7;opacity:0}}
 
-.section-dark{{background:var(--text);color:#fff;padding:100px 24px}}
-.section-dark .section-desc{{color:rgba(255,255,255,.6)}}
-.section-dark .section-label{{color:var(--purple-bright)}}
-.section-dark .section-title{{color:#fff}}
-.section-dark .section-title .gt{{background:linear-gradient(135deg,#d49acb,#f0d6ea);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
-
 /* ─── STATS ─── */
-.stats-grid{{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:var(--radius);overflow:hidden;opacity:0;max-width:1000px;margin:0 auto}}
-.stat-cell{{background:rgba(255,255,255,.6);padding:44px 24px;text-align:center;backdrop-filter:blur(4px)}}
+.stats-wrap{{padding:0 24px;max-width:1100px;margin:0 auto}}
+.stats-grid{{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:var(--radius);overflow:hidden;opacity:0;max-width:1000px;margin:0 auto;box-shadow:var(--shadow)}}
+.stat-cell{{background:rgba(255,255,255,.7);padding:44px 24px;text-align:center;backdrop-filter:blur(4px);transition:background .3s}}
+.stat-cell:hover{{background:rgba(255,255,255,.9)}}
 .stat-cell .num{{font-size:clamp(34px,3.8vw,52px);font-weight:900;color:var(--text);letter-spacing:-2px;line-height:1}}
 .stat-cell .num .purple{{color:var(--purple)}}
 .stat-cell .label{{font-size:12px;color:var(--text-dim);letter-spacing:1px;margin-top:8px;font-weight:500}}
@@ -160,11 +159,15 @@ footer .fp2{{margin-top:4px;font-size:10px;color:var(--text-muted);letter-spacin
 @media(max-width:768px){{#cursor{{display:none}}nav{{padding:12px 16px}}.nav-links{{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(247,243,238,.98);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);flex-direction:column;padding:20px;gap:16px;border-bottom:1px solid var(--border)}}
 .nav-links.open{{display:flex}}.nav-toggle{{display:flex;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}}
 .nav-toggle span{{width:22px;height:2px;background:var(--text);border-radius:2px;transition:var(--dur)}}
-section{{padding:60px 16px}}.hero{{padding:100px 16px 40px}}.hero-platform{{flex-direction:column;gap:12px;padding:16px 20px;text-align:center}}
-.hero-platform .info{{text-align:center}}
+section{{padding:60px 16px}}.hero{{padding:100px 16px 40px;min-height:90vh}}.hero-platform{{flex-direction:column;gap:12px;padding:20px 24px;text-align:center}}
+.hero-platform .info{{text-align:center}}.hero-platform .logo-wrap img{{height:36px}}
 .stack-grid,.strategy-grid{{grid-template-columns:1fr}}.stats-grid{{grid-template-columns:repeat(2,1fr)}}
-.about-card{{padding:36px 24px}}}}
-@media(max-width:480px){{body{{cursor:auto}}.btn{{cursor:pointer}}.hero h1{{font-size:30px;letter-spacing:-1.5px}}.stats-grid{{grid-template-columns:1fr}}}}
+.about-card{{padding:36px 24px}}.loop-track span{{font-size:10px;padding:0 18px}}}}
+@media(max-width:480px){{body{{cursor:auto}}.btn{{cursor:pointer}}.hero h1{{font-size:30px;letter-spacing:-1.5px}}.hero{{padding:80px 16px 32px;min-height:85vh}}
+.hero-platform{{padding:16px 18px;margin-top:28px}}.hero-platform .logo-wrap img{{height:28px}}
+.hero-platform .info .name{{font-size:14px;letter-spacing:2px}}.hero-platform .info .role{{font-size:9px}}
+.stack-card,.strategy-card{{padding:28px 24px}}.stats-grid{{grid-template-columns:1fr;border-radius:12px}}
+.section-title{{font-size:24px;letter-spacing:-1px}}.stat-cell{{padding:32px 16px}}}}
 </style>
 </head>
 <body>
@@ -220,15 +223,16 @@ section{{padding:60px 16px}}.hero{{padding:100px 16px 40px}}.hero-platform{{flex
 </div>
 
 <!-- STATS -->
-<div class="stats-grid" id="statsGrid">
+<div class="stats-wrap"><div class="stats-grid" id="statsGrid">
 <div class="stat-cell"><div class="num"><span class="counter" data-target="40">0</span><span class="purple">+</span></div><div class="label">Hours Saved Per Week</div></div>
 <div class="stat-cell"><div class="num"><span class="counter" data-target="8">0</span><span class="purple">x</span></div><div class="label">Lead Processing Speed</div></div>
 <div class="stat-cell"><div class="num"><span class="counter" data-target="60">0</span><span class="purple">%</span></div><div class="label">Higher Engagement</div></div>
 <div class="stat-cell"><div class="num"><span class="counter" data-target="8">0</span><span class="purple">wks</span></div><div class="label">Full Deployment</div></div>
-</div>
+</div></div>
 
 <!-- STACK -->
 <section id="stack">
+<div class="serif-bg" style="right:auto;left:-5%;top:-10%;transform:none;font-size:clamp(200px,30vw,400px);color:rgba(151,78,142,.02)">L</div>
 <p class="section-label reveal">The Arsenal</p>
 <h2 class="section-title reveal reveal-1">Quad-Engine <span class="gt">Loop</span></h2>
 <p class="section-desc reveal reveal-2">Four premium engines wired in series — each feeds the next, creating an accelerating growth loop.</p>
@@ -242,6 +246,7 @@ section{{padding:60px 16px}}.hero{{padding:100px 16px 40px}}.hero-platform{{flex
 
 <!-- STRATEGY -->
 <section id="strategy">
+<div class="serif-bg">∞</div>
 <p class="section-label reveal">Strategy</p>
 <h2 class="section-title reveal reveal-1">The <span class="gt">Loop</span> System</h2>
 <p class="section-desc reveal reveal-2">Five interconnected loops that transform how Anarock's residential mandate team operates.</p>
@@ -412,17 +417,16 @@ depthWrite: false
 const particles = new THREE.Points(ptGeo, ptMat);
 scene.add(particles);
 
-/* Resize */
-function resize() {{
+/* Resize observer (reliable) */
+const ro = new ResizeObserver(() => {{
 const w = canvas.clientWidth;
 const h = canvas.clientHeight;
 if (w === 0 || h === 0) return;
 renderer.setSize(w, h, false);
 camera.aspect = w / h;
 camera.updateProjectionMatrix();
-}}
-window.addEventListener('resize', resize);
-setTimeout(resize, 100);
+}});
+ro.observe(canvas.parentElement);
 
 /* Mouse tracking */
 let mx = 0, my = 0, tx = 0, ty = 0;
@@ -457,7 +461,7 @@ wire.position.y = 0.3 + Math.sin(t * 0.3) * 0.08;
 
 /* Animate orbiting rings */
 scene.children.forEach(child => {{
-if (child.isMesh && child.geometry.type === 'TorusGeometry') {{
+if (child.isMesh && child.geometry && child.geometry.type === 'TorusGeometry') {{
 child.rotation.z = t * child.userData.speed;
 child.position.y = 0.3 + Math.sin(t * 0.2 + child.userData.speed) * 0.06;
 }}
@@ -482,7 +486,9 @@ camera.lookAt(0, 0.3, 0);
 renderer.render(scene, camera);
 }}
 
-resize();
+/* Initial resize */
+requestAnimationFrame(() => ro.unobserve?.(canvas.parentElement));
+ro.observe(canvas.parentElement);
 animate();
 
 /* ─── LENIS ─── */

@@ -48,7 +48,8 @@ nav.scrolled{{background:rgba(247,243,238,.92);-webkit-backdrop-filter:blur(20px
 .nav-cta::after{{display:none!important}}.nav-cta:hover{{transform:translateY(-2px)!important;box-shadow:0 8px 32px rgba(151,78,142,.2)!important;color:#fff!important}}
 
 /* ─── HERO ─── */
-.hero{{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:140px 24px 60px;position:relative;overflow:hidden;background:linear-gradient(180deg,#f7f3ee 0%,#ede6f3 40%,#e0d6e8 100%)}}
+@keyframes bgLoop{{0%{{background-position:0% 50%}}25%{{background-position:50% 0%}}50%{{background-position:100% 50%}}75%{{background-position:50% 100%}}100%{{background-position:0% 50%}}}}
+.hero{{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:140px 24px 60px;position:relative;overflow:hidden;background:linear-gradient(135deg,#f7f3ee,#ede6f3,#f0eae2,#f5f0ee,#f7f3ee);background-size:400% 400%;animation:bgLoop 20s ease-in-out infinite}}
 #three-canvas{{position:absolute;inset:0;z-index:0;pointer-events:none}}
 
 .hero-content{{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%}}
@@ -71,14 +72,14 @@ nav.scrolled{{background:rgba(247,243,238,.92);-webkit-backdrop-filter:blur(20px
 .btn-secondary{{background:rgba(255,255,255,.7);color:var(--text);border:1px solid var(--border);backdrop-filter:blur(10px)}}
 .btn-secondary:hover{{background:rgba(255,255,255,.9);border-color:rgba(151,78,142,.2);transform:translateY(-3px)}}
 
-.hero-platform{{display:flex;align-items:center;gap:28px;padding:20px 36px;margin-top:40px;border-radius:var(--radius);background:rgba(255,255,255,.5);border:1px solid var(--border);opacity:0;backdrop-filter:blur(12px);box-shadow:var(--shadow)}}
-.hero-platform .logo-wrap{{width:auto;display:flex;align-items:center}}
-.hero-platform .logo-wrap img{{height:42px;width:auto;opacity:.95}}
-.hero-platform .divider{{width:1px;height:36px;background:var(--border)}}
+.hero-platform{{display:flex;align-items:center;gap:32px;padding:24px 40px;margin-top:44px;border-radius:var(--radius);background:rgba(255,255,255,.6);border:1px solid var(--border);opacity:0;backdrop-filter:blur(12px);box-shadow:0 8px 40px rgba(0,0,0,.04),0 2px 8px rgba(151,78,142,.06)}}
+.hero-platform .logo-wrap{{display:flex;align-items:center}}
+.hero-platform .logo-wrap img{{height:48px;width:auto;filter:drop-shadow(0 2px 4px rgba(0,0,0,.04))}}
+.hero-platform .divider{{width:1px;height:40px;background:var(--border)}}
 .hero-platform .info{{text-align:left}}
-.hero-platform .info .name{{font-size:16px;font-weight:800;letter-spacing:3px;color:var(--text);text-transform:uppercase}}
+.hero-platform .info .name{{font-size:18px;font-weight:800;letter-spacing:3.5px;color:var(--text);text-transform:uppercase}}
 .hero-platform .info .name .accent{{color:var(--purple)}}
-.hero-platform .info .role{{font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:2px}}
+.hero-platform .info .role{{font-size:11px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:2px}}
 
 /* ─── LOOP TICKER ─── */
 .loop-ticker{{width:100%;overflow:hidden;padding:18px 0;background:var(--purple);position:relative}}
@@ -306,88 +307,107 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
 
 /* Lights */
-const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+const ambient = new THREE.AmbientLight(0xffffff, 0.4);
 scene.add(ambient);
-const dir = new THREE.DirectionalLight(0xffffff, 1.5);
-dir.position.set(5, 10, 5);
+const hemi = new THREE.HemisphereLight(0xf7f3ee, 0x974e8e, 0.6);
+scene.add(hemi);
+const dir = new THREE.DirectionalLight(0xffffff, 1.8);
+dir.position.set(4, 8, 6);
 scene.add(dir);
-const dir2 = new THREE.DirectionalLight(0xd49acb, 0.8);
-dir2.position.set(-5, -5, 5);
-scene.add(dir2);
+const rim = new THREE.DirectionalLight(0xd49acb, 0.6);
+rim.position.set(-4, -2, -6);
+scene.add(rim);
 
 /* Main Torus Knot (The Loop) */
-const knotGeo = new THREE.TorusKnotGeometry(1.2, 0.35, 180, 24);
+const knotGeo = new THREE.TorusKnotGeometry(1.3, 0.38, 200, 28);
 const knotMat = new THREE.MeshPhysicalMaterial({{
 color: 0x974e8e,
 emissive: 0x974e8e,
-emissiveIntensity: 0.08,
-metalness: 0.1,
-roughness: 0.3,
-clearcoat: 0.2,
-clearcoatRoughness: 0.4,
+emissiveIntensity: 0.06,
+metalness: 0.15,
+roughness: 0.25,
+clearcoat: 0.3,
+clearcoatRoughness: 0.3,
 transparent: true,
-opacity: 0.92
+opacity: 0.9
 }});
 const knot = new THREE.Mesh(knotGeo, knotMat);
-knot.position.y = 0.5;
+knot.position.y = 0.3;
 scene.add(knot);
 
-/* Glow ring around knot */
-const glowGeo = new THREE.TorusKnotGeometry(1.35, 0.42, 120, 16);
+/* Outer glow wireframe */
+const glowGeo = new THREE.TorusKnotGeometry(1.45, 0.46, 140, 18);
 const glowMat = new THREE.MeshBasicMaterial({{
 color: 0xd49acb,
+transparent: true,
+opacity: 0.06,
+wireframe: true
+}});
+const glow = new THREE.Mesh(glowGeo, glowMat);
+glow.position.y = 0.3;
+scene.add(glow);
+
+/* Inner dense wireframe */
+const wireGeo = new THREE.TorusKnotGeometry(1.3, 0.38, 120, 14);
+const wireMat = new THREE.MeshBasicMaterial({{
+color: 0xb86aae,
 transparent: true,
 opacity: 0.08,
 wireframe: true
 }});
-const glow = new THREE.Mesh(glowGeo, glowMat);
-glow.position.y = 0.5;
-scene.add(glow);
-
-/* Inner wireframe */
-const wireGeo = new THREE.TorusKnotGeometry(1.2, 0.35, 100, 12);
-const wireMat = new THREE.MeshBasicMaterial({{
-color: 0x974e8e,
-transparent: true,
-opacity: 0.1,
-wireframe: true
-}});
 const wire = new THREE.Mesh(wireGeo, wireMat);
-wire.position.y = 0.5;
+wire.position.y = 0.3;
 scene.add(wire);
 
-/* Orbiting Particles (Loop paths) */
-const particleCount = 600;
+/* Secondary orbiting rings */
+for (let r = 0; r < 3; r++) {{
+const ringGeo = new THREE.TorusGeometry(2.2 + r * 0.6, 0.015, 16, 60);
+const ringMat = new THREE.MeshBasicMaterial({{
+color: r === 1 ? 0xd49acb : 0x974e8e,
+transparent: true,
+opacity: 0.08 - r * 0.02
+}});
+const ring = new THREE.Mesh(ringGeo, ringMat);
+ring.position.y = 0.3;
+ring.rotation.x = Math.PI * 0.5 + (r - 1) * 0.15;
+ring.userData = {{ speed: 0.1 + r * 0.05, tilt: (r - 1) * 0.15 }};
+scene.add(ring);
+}}
+
+/* Orbiting Particles */
+const particleCount = 800;
 const pos = new Float32Array(particleCount * 3);
-const sizes = new Float32Array(particleCount);
+const colors = new Float32Array(particleCount * 3);
 const phases = new Float32Array(particleCount);
 const radii = new Float32Array(particleCount);
 const speeds = new Float32Array(particleCount);
 
 for (let i = 0; i < particleCount; i++) {{
 const theta = Math.random() * Math.PI * 2;
-const phi = Math.acos(2 * Math.random() - 1);
-const r = 2 + Math.random() * 3;
-radii[i] = r;
-phases[i] = Math.random() * Math.PI * 2;
-speeds[i] = 0.2 + Math.random() * 0.4;
-sizes[i] = 2 + Math.random() * 4;
-pos[i*3] = r * Math.sin(phi) * Math.cos(theta);
-pos[i*3+1] = r * Math.sin(phi) * Math.sin(theta) * 0.4 + 0.5;
-pos[i*3+2] = r * Math.cos(phi);
+phases[i] = theta;
+speeds[i] = 0.15 + Math.random() * 0.5;
+radii[i] = 1.8 + Math.random() * 3.5;
+pos[i*3] = radii[i] * Math.cos(theta);
+pos[i*3+1] = (Math.random() - 0.5) * 1.2 + 0.3;
+pos[i*3+2] = radii[i] * Math.sin(theta);
+const c = new THREE.Color().setHSL(0.78 + Math.random() * 0.04, 0.4, 0.5 + Math.random() * 0.3);
+colors[i*3] = c.r;
+colors[i*3+1] = c.g;
+colors[i*3+2] = c.b;
 }}
 
 const ptGeo = new THREE.BufferGeometry();
 ptGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-ptGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+ptGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
 const ptMat = new THREE.PointsMaterial({{
-color: 0x974e8e,
-size: 0.04,
+size: 0.035,
 transparent: true,
-opacity: 0.4,
+opacity: 0.35,
+vertexColors: true,
 blending: THREE.AdditiveBlending,
-sizeAttenuation: true
+sizeAttenuation: true,
+depthWrite: false
 }});
 const particles = new THREE.Points(ptGeo, ptMat);
 scene.add(particles);
@@ -396,17 +416,19 @@ scene.add(particles);
 function resize() {{
 const w = canvas.clientWidth;
 const h = canvas.clientHeight;
+if (w === 0 || h === 0) return;
 renderer.setSize(w, h, false);
 camera.aspect = w / h;
 camera.updateProjectionMatrix();
 }}
 window.addEventListener('resize', resize);
+setTimeout(resize, 100);
 
-/* Mouse tracking for parallax */
-let mx = 0, my = 0;
+/* Mouse tracking */
+let mx = 0, my = 0, tx = 0, ty = 0;
 document.addEventListener('mousemove', e => {{
-mx = (e.clientX / innerWidth - 0.5) * 2;
-my = (e.clientY / innerHeight - 0.5) * -2;
+tx = (e.clientX / innerWidth - 0.5) * 2;
+ty = (e.clientY / innerHeight - 0.5) * -2;
 }});
 
 /* Animation loop */
@@ -414,35 +436,48 @@ function animate() {{
 requestAnimationFrame(animate);
 
 const t = performance.now() * 0.001;
+const float = Math.sin(t * 0.4) * 0.15;
+
+/* Smooth mouse */
+mx += (tx - mx) * 0.05;
+my += (ty - my) * 0.05;
 
 /* Rotate knot */
-knot.rotation.x = t * 0.15;
-knot.rotation.y = t * 0.2;
-glow.rotation.x = t * 0.12;
-glow.rotation.y = t * 0.18;
-wire.rotation.x = t * 0.15;
-wire.rotation.y = t * 0.2;
+knot.rotation.x = t * 0.12 + float * 0.1;
+knot.rotation.y = t * 0.18;
+knot.position.y = 0.3 + Math.sin(t * 0.3) * 0.08;
 
-/* Pulse knot */
-const pulse = 1 + Math.sin(t * 0.5) * 0.02;
-knot.scale.set(pulse, pulse, pulse);
+glow.rotation.x = t * 0.1 + float * 0.08;
+glow.rotation.y = t * 0.15;
+glow.position.y = 0.3 + Math.sin(t * 0.3) * 0.08;
 
-/* Orbit particles - toroidal paths */
+wire.rotation.x = t * 0.12 + float * 0.1;
+wire.rotation.y = t * 0.18;
+wire.position.y = 0.3 + Math.sin(t * 0.3) * 0.08;
+
+/* Animate orbiting rings */
+scene.children.forEach(child => {{
+if (child.isMesh && child.geometry.type === 'TorusGeometry') {{
+child.rotation.z = t * child.userData.speed;
+child.position.y = 0.3 + Math.sin(t * 0.2 + child.userData.speed) * 0.06;
+}}
+}});
+
+/* Orbit particles */
 const ppos = particles.geometry.attributes.position.array;
 for (let i = 0; i < particleCount; i++) {{
 const theta = phases[i] + t * speeds[i];
 const r = radii[i];
-const yOff = Math.sin(theta * 0.5) * 0.3;
 ppos[i*3] = r * Math.cos(theta);
-ppos[i*3+1] = Math.sin(theta * 0.7) * 0.3 + 0.5;
+ppos[i*3+1] = Math.sin(theta * 0.7 + phases[i]) * 0.3 + 0.3 + Math.sin(t * 0.2 + i) * 0.05;
 ppos[i*3+2] = r * Math.sin(theta);
 }}
 particles.geometry.attributes.position.needsUpdate = true;
 
-/* Camera parallax (subtle) */
-camera.position.x += (mx * 1.5 - camera.position.x) * 0.02;
-camera.position.y += (my * 0.8 + 2 - camera.position.y) * 0.02;
-camera.lookAt(0, 0.5, 0);
+/* Camera parallax */
+camera.position.x += (mx * 1.2 - camera.position.x) * 0.015;
+camera.position.y += (my * 0.6 + 2 - camera.position.y) * 0.015;
+camera.lookAt(0, 0.3, 0);
 
 renderer.render(scene, camera);
 }}

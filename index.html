@@ -1,1644 +1,427 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS — The AI Command Center</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS — AI Growth Engine for Anarock</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0b0d14;--bg2:#12151e;--text:#eeeef5;--text2:#8a8ea8;--text3:#555877;--orange:#F47920;--navy:#1A2744;--accent:#F47920;--blue:#3a5a8c;--g1:linear-gradient(135deg,#F47920,#e06810);--g2:linear-gradient(135deg,#2d4b7a,#4a7ab5);--gh:linear-gradient(135deg,#F47920 0%,#4a7ab5 50%,#1A2744 100%);--glass:rgba(255,255,255,0.03);--gb:rgba(255,255,255,0.08);--r:16px;--rs:8px;--rl:24px;--t:0.4s cubic-bezier(0.22,1,0.36,1)}
+html{scroll-behavior:smooth;scrollbar-color:var(--accent) var(--bg)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
 
-        :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: rgba(18, 18, 30, 0.6);
-            --text-primary: #f0f0f5;
-            --text-secondary: #8888aa;
-            --text-muted: #555577;
-            --accent-1: #6c5ce7;
-            --accent-2: #00cec9;
-            --accent-3: #fd79a8;
-            --accent-4: #fdcb6e;
-            --accent-5: #55efc4;
-            --gradient-1: linear-gradient(135deg, #6c5ce7, #a29bfe);
-            --gradient-2: linear-gradient(135deg, #00cec9, #55efc4);
-            --gradient-3: linear-gradient(135deg, #fd79a8, #e84393);
-            --gradient-4: linear-gradient(135deg, #fdcb6e, #e17055);
-            --gradient-hero: linear-gradient(135deg, #6c5ce7 0%, #00cec9 50%, #fd79a8 100%);
-            --border-color: rgba(255, 255, 255, 0.06);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --radius: 16px;
-            --radius-sm: 8px;
-            --radius-lg: 24px;
-            --transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-        }
+/* Particle canvas */
+#pc{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
 
-        html {
-            scroll-behavior: smooth;
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent-1) var(--bg-primary);
-        }
+/* Overlays */
+.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.01;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px}
+.grid{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(244,121,32,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(244,121,32,.03) 1px,transparent 1px);background-size:60px}
+.glow{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
+.g1{width:600px;height:600px;background:rgba(244,121,32,.08);top:-200px;right:-200px;animation:fg 20s ease-in-out infinite}
+.g2{width:500px;height:500px;background:rgba(26,39,68,.12);bottom:-150px;left:-150px;animation:fg 25s ease-in-out infinite reverse}
+.g3{width:400px;height:400px;background:rgba(244,121,32,.04);top:50%;left:50%;transform:translate(-50%,-50%);animation:fg 18s ease-in-out infinite 5s}
+@keyframes fg{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.05)}66%{transform:translate(-30px,50px) scale(.95)}}
 
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent-1);
-            border-radius: 3px;
-        }
+.wrap{position:relative;z-index:2}
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+/* Navigation */
+nav{position:fixed;top:0;left:0;width:100%;z-index:100;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;transition:var(--t)}
+nav.scrolled{background:rgba(11,13,20,.88);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--gb);padding:10px 40px}
+.logo{font-size:20px;font-weight:800;display:flex;align-items:center;gap:10px}
+.logo svg{height:28px}.logo .o{color:var(--orange)}
+.nl{display:flex;gap:28px;align-items:center;list-style:none}
+.nl a{color:var(--text2);text-decoration:none;font-size:13px;font-weight:500;transition:var(--t);position:relative}
+.nl a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--g1);transition:var(--t);border-radius:2px}
+.nl a:hover{color:var(--text)}.nl a:hover::after{width:100%}
+.nc{padding:8px 20px;border-radius:50px;background:var(--g1);color:#fff!important;font-weight:600!important}
+.nc::after{display:none!important}.nc:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(244,121,32,.3)}
+.mt{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.mt span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:var(--t)}
 
-        /* Particle canvas */
-        #particles-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            pointer-events: none;
-        }
+/* Hero with Loop Animation */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 24px 60px;position:relative}
 
-        /* Noise overlay */
-        .noise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.015;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 256px 256px;
-        }
+/* Loop Animation Container */
+.loop-container{position:relative;width:420px;height:420px;margin-bottom:32px;opacity:0;animation:fu .8s .1s forwards}
+@keyframes loopRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes loopRotateReverse{from{transform:rotate(360deg)}to{transform:rotate(0deg)}}
+@keyframes pulseGlow{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
-        /* Grid overlay */
-        .grid-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            background-image:
-                linear-gradient(rgba(108, 92, 231, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(108, 92, 231, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-        }
+/* Outer ring */
+.loop-ring{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;animation:loopRotate 12s linear infinite}
+.loop-ring::before{content:'';position:absolute;inset:-2px;border-radius:50%;border:2px solid transparent;border-top-color:var(--orange);border-right-color:var(--orange);filter:blur(1px)}
 
-        /* Ambient glow */
-        .ambient-glow {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(120px);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .ambient-glow-1 {
-            width: 600px;
-            height: 600px;
-            background: rgba(108, 92, 231, 0.12);
-            top: -200px;
-            left: -200px;
-            animation: floatGlow 20s ease-in-out infinite;
-        }
-        .ambient-glow-2 {
-            width: 500px;
-            height: 500px;
-            background: rgba(0, 206, 201, 0.08);
-            bottom: -150px;
-            right: -150px;
-            animation: floatGlow 25s ease-in-out infinite reverse;
-        }
-        .ambient-glow-3 {
-            width: 400px;
-            height: 400px;
-            background: rgba(253, 121, 168, 0.06);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: floatGlow 18s ease-in-out infinite 5s;
-        }
+/* Middle ring */
+.loop-ring-2{position:absolute;inset:40px;border-radius:50%;border:1.5px solid transparent;animation:loopRotateReverse 8s linear infinite}
+.loop-ring-2::before{content:'';position:absolute;inset:-1.5px;border-radius:50%;border:1.5px solid transparent;border-bottom-color:var(--blue);border-left-color:var(--blue);filter:blur(1px)}
 
-        @keyframes floatGlow {
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(60px, -40px) scale(1.05);
-            }
-            66% {
-                transform: translate(-30px, 50px) scale(0.95);
-            }
-        }
+/* Inner ring */
+.loop-ring-3{position:absolute;inset:80px;border-radius:50%;border:1px solid transparent;animation:loopRotate 6s linear infinite}
+.loop-ring-3::before{content:'';position:absolute;inset:-1px;border-radius:50%;border:1px solid transparent;border-top-color:rgba(244,121,32,.5);filter:blur(1px)}
 
-        .site-wrapper {
-            position: relative;
-            z-index: 2;
-        }
+/* Orbiting dots */
+.orbit-dot{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 12px rgba(244,121,32,.6);animation:loopRotate 12s linear infinite}
+.orbit-dot::after{content:'';position:absolute;width:6px;height:6px;border-radius:50%;background:var(--blue);top:2px;left:2px;opacity:.5}
+.orbit-dot:nth-child(2){animation-delay:-3s;background:var(--blue);box-shadow:0 0 12px rgba(58,90,140,.6)}
+.orbit-dot:nth-child(2)::after{background:var(--orange)}
+.orbit-dot:nth-child(3){animation-delay:-6s;background:rgba(244,121,32,.6);box-shadow:0 0 8px rgba(244,121,32,.4)}
+.orbit-dot:nth-child(4){animation-delay:-9s;background:rgba(58,90,140,.6);box-shadow:0 0 8px rgba(58,90,140,.4)}
 
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 100;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition);
-        }
-        nav.scrolled {
-            background: rgba(10, 10, 15, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 12px 40px;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: var(--gradient-1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 900;
-            color: white;
-        }
-        .logo span {
-            background: var(--gradient-hero);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-            list-style: none;
-        }
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: var(--transition);
-            position: relative;
-        }
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gradient-1);
-            transition: var(--transition);
-            border-radius: 2px;
-        }
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-        .nav-cta {
-            padding: 8px 20px;
-            border-radius: 50px;
-            background: var(--gradient-1);
-            color: white !important;
-            font-weight: 600 !important;
-            transition: var(--transition);
-        }
-        .nav-cta::after {
-            display: none !important;
-        }
-        .nav-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(108, 92, 231, 0.3);
-        }
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 4px;
-        }
-        .menu-toggle span {
-            width: 24px;
-            height: 2px;
-            background: var(--text-primary);
-            border-radius: 2px;
-            transition: var(--transition);
-        }
+/* Glow pulse behind center */
+.loop-glow{position:absolute;inset:60px;border-radius:50%;background:radial-gradient(circle,rgba(244,121,32,.15) 0%,transparent 70%);animation:pulseGlow 3s ease-in-out infinite}
 
-        /* Hero */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 120px 24px 80px;
-            position: relative;
-        }
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px;
-            border-radius: 50px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--accent-2);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 32px;
-            animation: fadeInUp 0.8s ease forwards;
-            opacity: 0;
-        }
-        .hero-badge .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent-2);
-            animation: pulse-dot 2s ease-in-out infinite;
-        }
-        @keyframes pulse-dot {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(0.8);
-            }
-        }
-        .hero h1 {
-            font-size: clamp(48px, 10vw, 96px);
-            font-weight: 900;
-            letter-spacing: -3px;
-            line-height: 1.05;
-            margin-bottom: 16px;
-            animation: fadeInUp 0.8s ease 0.15s forwards;
-            opacity: 0;
-        }
-        .hero h1 .gradient-text {
-            background: var(--gradient-hero);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            background-size: 200% 200%;
-            animation: gradientShift 6s ease-in-out infinite;
-        }
-        @keyframes gradientShift {
-            0%,
-            100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-        }
-        .hero-subtitle {
-            font-size: clamp(18px, 2.5vw, 24px);
-            color: var(--text-secondary);
-            max-width: 680px;
-            margin-bottom: 40px;
-            animation: fadeInUp 0.8s ease 0.3s forwards;
-            opacity: 0;
-            font-weight: 400;
-            line-height: 1.6;
-        }
-        .hero-actions {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            justify-content: center;
-            animation: fadeInUp 0.8s ease 0.45s forwards;
-            opacity: 0;
-        }
-        .btn {
-            padding: 14px 32px;
-            border-radius: 50px;
-            font-size: 15px;
-            font-weight: 600;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: inherit;
-        }
-        .btn-primary {
-            background: var(--gradient-1);
-            color: white;
-            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.25);
-        }
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(108, 92, 231, 0.35);
-        }
-        .btn-secondary {
-            background: var(--glass-bg);
-            color: var(--text-primary);
-            border: 1px solid var(--glass-border);
-        }
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-3px);
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-        .hero-stats {
-            display: flex;
-            gap: 48px;
-            margin-top: 64px;
-            animation: fadeInUp 0.8s ease 0.6s forwards;
-            opacity: 0;
-        }
-        .hero-stat {
-            text-align: center;
-        }
-        .hero-stat .number {
-            font-size: 36px;
-            font-weight: 800;
-            background: var(--gradient-hero);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .hero-stat .label {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 4px;
-        }
+/* Center logo area */
+.loop-center{position:absolute;inset:100px;border-radius:50%;background:rgba(11,13,20,.9);border:1px solid var(--gb);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:floatY 4s ease-in-out infinite;backdrop-filter:blur(8px)}
+.loop-center svg{width:160px;height:auto;margin-bottom:4px}
+.loop-center .name{font-size:14px;font-weight:700;color:var(--text);letter-spacing:2px;text-transform:uppercase;font-family:'Inter',sans-serif}
+.loop-center .role{font-size:10px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
 
-        /* Typing effect */
-        .typing-wrapper {
-            display: inline-block;
-            animation: fadeInUp 0.8s ease 0.15s forwards;
-            opacity: 0;
-        }
-        .typing-text {
-            font-size: clamp(20px, 3vw, 32px);
-            color: var(--text-secondary);
-            font-weight: 500;
-            border-right: 3px solid var(--accent-1);
-            padding-right: 8px;
-            animation: blink 0.8s step-end infinite;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-        @keyframes blink {
-            50% {
-                border-color: transparent;
-            }
-        }
+.hb{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:50px;background:var(--glass);border:1px solid var(--gb);font-size:11px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;opacity:0;animation:fu .8s .2s forwards}
+.hb .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pd 2s ease-in-out infinite}
+@keyframes pd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+.hn{font-size:clamp(14px,1.2vw,17px);color:var(--text2);font-weight:500;margin-bottom:6px;opacity:0;animation:fu .8s .3s forwards}
+.hn strong{color:var(--accent)}
 
-        /* Sections common */
-        section {
-            padding: 100px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .section-label {
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2.5px;
-            color: var(--accent-1);
-            margin-bottom: 12px;
-        }
-        .section-title {
-            font-size: clamp(32px, 5vw, 52px);
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            margin-bottom: 16px;
-            line-height: 1.1;
-        }
-        .section-desc {
-            font-size: 18px;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin-bottom: 48px;
-            line-height: 1.7;
-        }
+.hero h1{font-size:clamp(36px,8vw,76px);font-weight:900;letter-spacing:-2.5px;line-height:1.05;margin-bottom:10px;opacity:0;animation:fu .8s .35s forwards}
+.hero h1 .gt{background:var(--gh);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% 200%;animation:gs 6s ease-in-out infinite}
+@keyframes gs{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 
-        /* Skills section */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .skill-card {
-            padding: 32px;
-            border-radius: var(--radius);
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(12px);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            cursor: default;
-        }
-        .skill-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--gradient-1);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: var(--transition);
-        }
-        .skill-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(108, 92, 231, 0.2);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-        .skill-card:hover::before {
-            transform: scaleX(1);
-        }
-        .skill-card .icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            margin-bottom: 16px;
-        }
-        .skill-card h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .skill-card p {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-        .skill-card .tags {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 16px;
-        }
-        .skill-card .tags span {
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            background: rgba(108, 92, 231, 0.1);
-            color: var(--accent-1);
-            border: 1px solid rgba(108, 92, 231, 0.15);
-        }
-        .skill-card:nth-child(2)::before {
-            background: var(--gradient-2);
-        }
-        .skill-card:nth-child(2) .icon {
-            background: rgba(0, 206, 201, 0.1);
-            color: var(--accent-2);
-        }
-        .skill-card:nth-child(2) .tags span {
-            background: rgba(0, 206, 201, 0.1);
-            color: var(--accent-2);
-            border-color: rgba(0, 206, 201, 0.15);
-        }
-        .skill-card:nth-child(3)::before {
-            background: var(--gradient-3);
-        }
-        .skill-card:nth-child(3) .icon {
-            background: rgba(253, 121, 168, 0.1);
-            color: var(--accent-3);
-        }
-        .skill-card:nth-child(3) .tags span {
-            background: rgba(253, 121, 168, 0.1);
-            color: var(--accent-3);
-            border-color: rgba(253, 121, 168, 0.15);
-        }
-        .skill-card:nth-child(4)::before {
-            background: var(--gradient-4);
-        }
-        .skill-card:nth-child(4) .icon {
-            background: rgba(253, 203, 110, 0.1);
-            color: var(--accent-4);
-        }
-        .skill-card:nth-child(4) .tags span {
-            background: rgba(253, 203, 110, 0.1);
-            color: var(--accent-4);
-            border-color: rgba(253, 203, 110, 0.15);
-        }
-        .skill-card:nth-child(5)::before {
-            background: var(--gradient-2);
-        }
-        .skill-card:nth-child(5) .icon {
-            background: rgba(85, 239, 196, 0.1);
-            color: var(--accent-5);
-        }
-        .skill-card:nth-child(5) .tags span {
-            background: rgba(85, 239, 196, 0.1);
-            color: var(--accent-5);
-            border-color: rgba(85, 239, 196, 0.15);
-        }
+.tw{display:inline-block;opacity:0;animation:fu .8s .4s forwards;margin-bottom:16px}
+.tt{font-size:clamp(14px,1.8vw,20px);color:var(--text2);font-weight:500;border-right:3px solid var(--accent);padding-right:6px;animation:bl .8s step-end infinite;white-space:nowrap;overflow:hidden;max-width:100%}
+@keyframes bl{50%{border-color:transparent}}
 
-        /* Stack section */
-        .stack-showcase {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-        }
-        .stack-card {
-            padding: 28px;
-            border-radius: var(--radius);
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            text-align: center;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        .stack-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: var(--radius);
-            opacity: 0;
-            transition: var(--transition);
-        }
-        .stack-card:hover {
-            transform: translateY(-6px) scale(1.02);
-        }
-        .stack-card .stack-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            margin: 0 auto 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            position: relative;
-            z-index: 1;
-        }
-        .stack-card h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            position: relative;
-            z-index: 1;
-        }
-        .stack-card p {
-            font-size: 13px;
-            color: var(--text-secondary);
-            position: relative;
-            z-index: 1;
-        }
-        .stack-card .stack-tag {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            position: relative;
-            z-index: 1;
-        }
+.hs{font-size:clamp(14px,1.4vw,17px);color:var(--text2);max-width:720px;margin-bottom:24px;opacity:0;animation:fu .8s .45s forwards;font-weight:400;line-height:1.7}
+.ha{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fu .8s .5s forwards}
+.btn{padding:13px 30px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:var(--t);display:inline-flex;align-items:center;gap:8px;font-family:inherit}
+.bp{background:var(--g1);color:#fff;box-shadow:0 4px 20px rgba(244,121,32,.25)}.bp:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(244,121,32,.35)}
+.bs{background:var(--glass);color:var(--text);border:1px solid var(--gb)}.bs:hover{background:rgba(255,255,255,.08);transform:translateY(-3px);border-color:rgba(255,255,255,.15)}
 
-        /* Features / Workflow section */
-        .workflow {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 32px;
-            margin-top: 48px;
-        }
-        .workflow-step {
-            text-align: center;
-            padding: 32px 20px;
-            position: relative;
-        }
-        .workflow-step .step-number {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: var(--gradient-1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: 800;
-            margin: 0 auto 20px;
-            color: white;
-            box-shadow: 0 8px 24px rgba(108, 92, 231, 0.25);
-        }
-        .workflow-step h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .workflow-step p {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
+.ab{display:flex;align-items:center;justify-content:center;gap:14px;padding:14px 24px;margin-top:28px;border-radius:var(--r);background:rgba(26,39,68,.4);border:1px solid rgba(244,121,32,.15);opacity:0;animation:fu .8s .55s forwards;flex-wrap:wrap}
+.ab .dv{width:1px;height:28px;background:var(--gb)}.ab .l{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px}.ab .v{font-size:13px;font-weight:600;color:var(--text)}.ab .tr{font-size:13px;color:var(--accent);font-weight:600}
 
-        /* Testimonials / Pulse */
-        .pulse-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
-        }
-        .pulse-card {
-            padding: 28px;
-            border-radius: var(--radius);
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            transition: var(--transition);
-        }
-        .pulse-card:hover {
-            border-color: rgba(108, 92, 231, 0.2);
-            transform: translateY(-4px);
-        }
-        .pulse-card .quote {
-            font-size: 15px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: 16px;
-            font-style: italic;
-        }
-        .pulse-card .author {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .pulse-card .author .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--gradient-1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 700;
-            color: white;
-        }
-        .pulse-card .author .name {
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .pulse-card .author .role {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .pulse-card:nth-child(2) .author .avatar {
-            background: var(--gradient-2);
-        }
-        .pulse-card:nth-child(3) .author .avatar {
-            background: var(--gradient-3);
-        }
+@keyframes fu{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
-        /* CTA section */
-        .cta-section {
-            text-align: center;
-            padding: 120px 24px;
-            background: radial-gradient(ellipse at center, rgba(108, 92, 231, 0.08) 0%, transparent 70%);
-            border-top: 1px solid var(--glass-border);
-            border-bottom: 1px solid var(--glass-border);
-        }
-        .cta-section h2 {
-            font-size: clamp(32px, 5vw, 56px);
-            font-weight: 800;
-            letter-spacing: -2px;
-            margin-bottom: 16px;
-        }
-        .cta-section p {
-            font-size: 18px;
-            color: var(--text-secondary);
-            max-width: 500px;
-            margin: 0 auto 40px;
-        }
-        .cta-actions {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+/* Sections */
+section{padding:90px 24px;max-width:1200px;margin:0 auto}
+.sl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:var(--accent);margin-bottom:10px}
+.st{font-size:clamp(26px,4vw,44px);font-weight:800;letter-spacing:-1.5px;margin-bottom:12px;line-height:1.1}
+.sd{font-size:16px;color:var(--text2);max-width:640px;margin-bottom:44px;line-height:1.7}
 
-        /* Footer */
-        footer {
-            padding: 40px 24px;
-            text-align: center;
-            border-top: 1px solid var(--glass-border);
-        }
-        footer p {
-            color: var(--text-muted);
-            font-size: 13px;
-        }
-        footer .footer-links {
-            display: flex;
-            gap: 24px;
-            justify-content: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-        footer .footer-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 13px;
-            transition: var(--transition);
-        }
-        footer .footer-links a:hover {
-            color: var(--text-primary);
-        }
-        footer .made-with {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 12px;
-        }
+/* Stack cards */
+.ss{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+.sc2{padding:26px;border-radius:var(--r);background:var(--glass);border:1px solid var(--gb);text-align:center;transition:var(--t);position:relative;overflow:hidden}
+.sc2::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;background:conic-gradient(from var(--angle,0deg),var(--orange),var(--blue),var(--navy),var(--orange));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:rb 4s linear infinite;opacity:0;transition:opacity .4s}
+.sc2:hover::before{opacity:1}
+.sc2:hover{transform:translateY(-6px) scale(1.02)}
+.sc2 .si{width:60px;height:60px;border-radius:16px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:26px}
+.sc2 h3{font-size:16px;font-weight:700;margin-bottom:4px}.sc2 p{font-size:12px;color:var(--text2)}
+@keyframes rb{to{--angle:360deg}}
+@property --angle{syntax:'<angle>';initial-value:0deg;inherits:false}
 
-        /* Reveal animations */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .reveal-delay-1 {
-            transition-delay: 0.1s;
-        }
-        .reveal-delay-2 {
-            transition-delay: 0.2s;
-        }
-        .reveal-delay-3 {
-            transition-delay: 0.3s;
-        }
-        .reveal-delay-4 {
-            transition-delay: 0.4s;
-        }
-        .reveal-delay-5 {
-            transition-delay: 0.5s;
-        }
+/* Strategy cards */
+.stg{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;margin-top:36px}
+.stc{padding:30px;border-radius:var(--r);background:var(--glass);border:1px solid var(--gb);transition:var(--t);overflow:hidden}
+.stc:hover{transform:translateY(-6px);border-color:rgba(244,121,32,.2);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.stc .nm{font-size:44px;font-weight:900;color:rgba(244,121,32,.1);line-height:1;margin-bottom:6px}
+.stc h3{font-size:17px;font-weight:700;margin-bottom:6px}
+.stc p{font-size:13px;color:var(--text2);line-height:1.7}
+.stc .im{margin-top:14px;padding:8px 14px;border-radius:var(--rs);background:rgba(244,121,32,.08);border:1px solid rgba(244,121,32,.12);font-size:12px;color:var(--accent);font-weight:600}
 
-        /* Command palette */
-        .cmd-palette {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 200;
-        }
-        .cmd-toggle {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: var(--gradient-1);
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .cmd-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 32px rgba(108, 92, 231, 0.4);
-        }
-        .cmd-panel {
-            position: absolute;
-            bottom: 64px;
-            right: 0;
-            width: 320px;
-            background: rgba(18, 18, 26, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            padding: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            display: none;
-        }
-        .cmd-panel.open {
-            display: block;
-            animation: fadeInUp 0.25s ease;
-        }
-        .cmd-panel .cmd-search {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            background: var(--bg-secondary);
-            border: 1px solid var(--glass-border);
-            color: var(--text-primary);
-            font-size: 14px;
-            font-family: inherit;
-            outline: none;
-            margin-bottom: 12px;
-        }
-        .cmd-panel .cmd-search:focus {
-            border-color: var(--accent-1);
-        }
-        .cmd-panel .cmd-item {
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        .cmd-panel .cmd-item:hover {
-            background: rgba(108, 92, 231, 0.1);
-            color: var(--text-primary);
-        }
-        .cmd-panel .cmd-item .cmd-key {
-            margin-left: auto;
-            padding: 2px 8px;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.05);
-            font-size: 11px;
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--text-muted);
-        }
+/* Table */
+.tw2{overflow-x:auto;margin-top:28px;border-radius:var(--r);border:1px solid var(--gb)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:rgba(26,39,68,.4)}
+th{padding:14px 18px;text-align:left;font-weight:600;color:var(--accent);font-size:11px;text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid var(--gb)}
+td{padding:12px 18px;border-bottom:1px solid var(--gb);color:var(--text2)}
+tr:hover td{background:rgba(255,255,255,.02)}
+td:first-child{font-weight:600;color:var(--text)}
 
-        /* 3D Tilt Card */
-        .tilt-card {
-            perspective: 1000px;
-            display: inline-block;
-            margin-top: 32px;
-        }
-        .tilt-card-inner {
-            padding: 24px 40px;
-            border-radius: var(--radius-lg);
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(12px);
-            transform-style: preserve-3d;
-            transition: transform 0.3s ease;
-            font-size: 16px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-        .tilt-card-inner strong {
-            color: var(--text-primary);
-        }
+/* Roadmap */
+.rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:36px}
+.rc{padding:26px;border-radius:var(--r);background:var(--glass);border:1px solid var(--gb);text-align:center;transition:var(--t)}
+.rc:hover{transform:translateY(-6px);border-color:rgba(244,121,32,.2)}
+.rc .ph{display:inline-block;padding:4px 12px;border-radius:50px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:rgba(244,121,32,.1);color:var(--accent);border:1px solid rgba(244,121,32,.15);margin-bottom:10px}
+.rc h3{font-size:17px;font-weight:700;margin-bottom:10px}
+.rc ul{list-style:none;text-align:left}
+.rc ul li{padding:3px 0;font-size:12px;color:var(--text2);padding-left:14px;position:relative}
+.rc ul li::before{content:'→';position:absolute;left:0;color:var(--accent)}
 
-        /* Animated gradient border card */
-        .gradient-border-card {
-            position: relative;
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-        .gradient-border-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            padding: 1px;
-            background: conic-gradient(from var(--angle, 0deg), var(--accent-1), var(--accent-2), var(--accent-3), var(--accent-1));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            animation: rotateBorder 4s linear infinite;
-        }
-        @property --angle {
-            syntax: '<angle>';
-            initial-value: 0deg;
-            inherits: false;
-        }
-        @keyframes rotateBorder {
-            to {
-                --angle: 360deg;
-            }
-        }
+/* Delta Force */
+.ds{padding:90px 24px;max-width:900px;margin:0 auto;text-align:center}
+.ds h2{font-size:clamp(26px,4vw,44px);font-weight:800;margin-bottom:16px}
+.ds .vp{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:36px}
+.ds .vp .vi{padding:18px;border-radius:var(--r);background:var(--glass);border:1px solid var(--gb);transition:var(--t)}
+.ds .vp .vi:hover{transform:translateY(-4px);border-color:rgba(244,121,32,.15)}
+.ds .vp .vi .vic{font-size:26px;margin-bottom:6px}
+.ds .vp .vi h4{font-size:14px;font-weight:700;margin-bottom:3px}
+.ds .vp .vi p{font-size:12px;color:var(--text2)}
 
-        /* Floating elements */
-        .float-element {
-            position: absolute;
-            pointer-events: none;
-            opacity: 0.1;
-            font-size: 80px;
-            animation: floatAround 25s ease-in-out infinite;
-        }
+/* CTA */
+.cta{text-align:center;padding:90px 24px;background:radial-gradient(ellipse at center,rgba(244,121,32,.05) 0%,transparent 70%);border-top:1px solid var(--gb);border-bottom:1px solid var(--gb)}
+.cta h2{font-size:clamp(26px,4vw,44px);font-weight:800;margin-bottom:14px}
+.cta p{font-size:16px;color:var(--text2);max-width:500px;margin:0 auto 28px}
 
-        @keyframes floatAround {
-            0%,
-            100% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            25% {
-                transform: translate(80px, -60px) rotate(5deg);
-            }
-            50% {
-                transform: translate(-40px, 40px) rotate(-3deg);
-            }
-            75% {
-                transform: translate(60px, 80px) rotate(4deg);
-            }
-        }
+/* Footer */
+footer{padding:36px 24px;text-align:center;border-top:1px solid var(--gb)}
+footer p{color:var(--text3);font-size:12px}
+footer .fl{display:flex;gap:20px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+footer .fl a{color:var(--text2);text-decoration:none;font-size:12px;transition:var(--t)}
+footer .fl a:hover{color:var(--text)}
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            nav {
-                padding: 16px 20px;
-            }
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: rgba(10, 10, 15, 0.95);
-                backdrop-filter: blur(20px);
-                flex-direction: column;
-                padding: 20px;
-                gap: 16px;
-                border-bottom: 1px solid var(--glass-border);
-            }
-            .nav-links.open {
-                display: flex;
-            }
-            .menu-toggle {
-                display: flex;
-            }
-            .hero-stats {
-                gap: 24px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            section {
-                padding: 60px 20px;
-            }
-            .cmd-panel {
-                width: calc(100vw - 48px);
-                right: -12px;
-            }
-        }
+/* Reveal */
+.rv{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}
+.rv.vi{opacity:1;transform:translateY(0)}
+.r1{transition-delay:.1s}.r2{transition-delay:.2s}.r3{transition-delay:.3s}.r4{transition-delay:.4s}.r5{transition-delay:.5s}
 
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 36px;
-                letter-spacing: -1px;
-            }
-            .skills-grid {
-                grid-template-columns: 1fr;
-            }
-            .stack-showcase {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-    </style>
+/* Command palette */
+.cp{position:fixed;bottom:24px;right:24px;z-index:200}
+.ct2{width:50px;height:50px;border-radius:50%;background:var(--g1);border:none;color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 20px rgba(244,121,32,.3);transition:var(--t);display:flex;align-items:center;justify-content:center}
+.ct2:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(244,121,32,.4)}
+.cpn{position:absolute;bottom:62px;right:0;width:320px;background:rgba(18,21,30,.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1px solid var(--gb);border-radius:var(--r);padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.5);display:none}
+.cpn.open{display:block;animation:fu .25s}
+.cpn input{width:100%;padding:10px 12px;border-radius:var(--rs);background:var(--bg2);border:1px solid var(--gb);color:var(--text);font-size:13px;font-family:inherit;outline:none;margin-bottom:10px}
+.cpn input:focus{border-color:var(--accent)}
+.cpn .ci{padding:9px 12px;border-radius:var(--rs);cursor:pointer;transition:var(--t);display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)}
+.cpn .ci:hover{background:rgba(244,121,32,.1);color:var(--text)}
+.cpn .ci .ck{margin-left:auto;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.05);font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3)}
+
+/* Tilt card */
+.tc{perspective:1000px;display:inline-block;margin-top:20px}
+.tci{padding:16px 28px;border-radius:var(--rl);background:var(--glass);border:1px solid var(--gb);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transform-style:preserve-3d;transition:transform .3s ease;font-size:14px;color:var(--text2);font-weight:500}
+.tci strong{color:var(--accent)}
+
+/* Responsive */
+@media(max-width:768px){
+nav{padding:14px 20px}
+.nl{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(11,13,20,.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);flex-direction:column;padding:20px;gap:14px;border-bottom:1px solid var(--gb)}
+.nl.open{display:flex}.mt{display:flex}section{padding:50px 16px}
+.cpn{width:calc(100vw - 40px);right:-10px}
+.ab{flex-direction:column;gap:6px}.ab .dv{display:none}
+.loop-container{width:300px;height:300px}
+.loop-center{inset:70px}
+.loop-center svg{width:110px}
+.loop-center .name{font-size:11px}
+}
+@media(max-width:480px){
+.hero h1{font-size:30px;letter-spacing:-1px}
+.ss,.stg{grid-template-columns:1fr}
+.loop-container{width:260px;height:260px}
+.loop-center{inset:60px}
+.loop-center svg{width:90px}
+.loop-center .name{font-size:10px}
+}
+</style>
 </head>
 <body>
+<canvas id="pc"></canvas>
+<div class="noise"></div>
+<div class="grid"></div>
+<div class="glow g1"></div>
+<div class="glow g2"></div>
+<div class="glow g3"></div>
 
-    <canvas id="particles-canvas"></canvas>
-    <div class="noise-overlay"></div>
-    <div class="grid-overlay"></div>
-    <div class="ambient-glow ambient-glow-1"></div>
-    <div class="ambient-glow ambient-glow-2"></div>
-    <div class="ambient-glow ambient-glow-3"></div>
+<div class="wrap">
+<nav id="nav">
+<div class="logo">
+<svg viewBox="0 0 234 42" fill="none"><path d="M18 30H6V18H18V30Z" fill="#F47920"/><path d="M18 12H6V30H18V12ZM24 36H0V6H24V36Z" fill="#4A7AB5"/><path d="M48 30H36V18H48V30Z" fill="#F47920"/><path d="M36 30H48V12H36V30ZM54 36H36V42H30V6H54V36Z" fill="#4A7AB5"/><path d="M84 24V30H66V24H84Z" fill="#F47920"/><path d="M84 24H66V30H84V36H60V6H84V24ZM66 18H78V12H66V18Z" fill="#4A7AB5"/><path d="M108 36H96V18H108V36Z" fill="#F47920"/><path d="M108 12H96V36H90V6H108V12ZM114 36H108V12H114V36Z" fill="#4A7AB5"/><path d="M144 30H126V18H144V30Z" fill="#F47920"/><path d="M144 12H126V30H144V36H120V6H144V12Z" fill="#1A2744"/><path d="M168 30H156V18H168V30Z" fill="#F47920"/><path d="M168 12H156V30H168V12ZM174 36H150V6H174V36Z" fill="#1A2744"/><path d="M198 30H186V18H198V30Z" fill="#F47920"/><path d="M198 12H186V30H198V12ZM204 36H180V6H198V0H204V36Z" fill="#1A2744"/><path d="M234 24V30H216V24H234Z" fill="#F47920"/><path d="M216 12V18H228V12H216ZM234 24H216V30H234V36H210V6H234V24Z" fill="#1A2744"/></svg>
+ANAROCK <span class="o">·</span> NEXUS
+</div>
+<button class="mt" id="mt"><span></span><span></span><span></span></button>
+<ul class="nl" id="nl">
+<li><a href="#stack">Stack</a></li>
+<li><a href="#strategy">Strategy</a></li>
+<li><a href="#roi">ROI</a></li>
+<li><a href="#roadmap">Roadmap</a></li>
+<li><a href="#delta" class="nc">Delta Force</a></li>
+</ul>
+</nav>
 
-    <div class="site-wrapper">
-        <nav id="navbar">
-            <div class="logo">
-                <div class="logo-icon">N</div>
-                <span>EXUS</span>
-            </div>
-            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-                <span></span><span></span><span></span>
-            </button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#stack">Stack</a></li>
-                <li><a href="#workflow">Workflow</a></li>
-                <li><a href="#pulse">Pulse</a></li>
-                <li><a href="#cta" class="nav-cta">Get Started</a></li>
-            </ul>
-        </nav>
+<section class="hero">
+<!-- Loop Animation -->
+<div class="loop-container">
+<div class="loop-ring"></div>
+<div class="loop-ring-2"></div>
+<div class="loop-ring-3"></div>
+<div class="orbit-dot" style="top:0;left:50%;transform:translateX(-50%)"></div>
+<div class="orbit-dot" style="top:50%;right:0;transform:translateY(-50%)"></div>
+<div class="orbit-dot" style="bottom:0;left:50%;transform:translateX(-50%)"></div>
+<div class="orbit-dot" style="top:50%;left:0;transform:translateY(-50%)"></div>
+<div class="loop-glow"></div>
+<div class="loop-center">
+<svg viewBox="0 0 234 42" fill="none"><path d="M18 30H6V18H18V30Z" fill="#F47920"/><path d="M18 12H6V30H18V12ZM24 36H0V6H24V36Z" fill="#4A7AB5"/><path d="M48 30H36V18H48V30Z" fill="#F47920"/><path d="M36 30H48V12H36V30ZM54 36H36V42H30V6H54V36Z" fill="#4A7AB5"/><path d="M84 24V30H66V24H84Z" fill="#F47920"/><path d="M84 24H66V30H84V36H60V6H84V24ZM66 18H78V12H66V18Z" fill="#4A7AB5"/><path d="M108 36H96V18H108V36Z" fill="#F47920"/><path d="M108 12H96V36H90V6H108V12ZM114 36H108V12H114V36Z" fill="#4A7AB5"/><path d="M144 30H126V18H144V30Z" fill="#F47920"/><path d="M144 12H126V30H144V36H120V6H144V12Z" fill="#1A2744"/><path d="M168 30H156V18H168V30Z" fill="#F47920"/><path d="M168 12H156V30H168V12ZM174 36H150V6H174V36Z" fill="#1A2744"/><path d="M198 30H186V18H198V30Z" fill="#F47920"/><path d="M198 12H186V30H198V12ZM204 36H180V6H198V0H204V36Z" fill="#1A2744"/><path d="M234 24V30H216V24H234Z" fill="#F47920"/><path d="M216 12V18H228V12H216ZM234 24H216V30H234V36H210V6H234V24Z" fill="#1A2744"/></svg>
+<div class="name">SHISHIR KAMBLE</div>
+<div class="role">Growth Manager</div>
+</div>
+</div>
 
-        <section class="hero" id="hero">
-            <div class="hero-badge">
-                <span class="dot"></span>
-                Next-Gen AI Command Center
-            </div>
+<div class="hb"><span class="dot"></span>Growth Strategy · Residential Mandate</div>
+<p class="hn">Presented by <strong>Shishir Kamble</strong> — Growth Manager</p>
+<h1>The AI-Powered<br><span class="gt">Growth Engine</span></h1>
+<div class="tw"><div class="tt" id="tt"></div></div>
+<p class="hs">Unifying OpenCode Go, ChatGPT+, Gemini Pro, and Ralph Loop into a single devastatingly effective growth machine for Anarock's residential mandate vertical.</p>
+<div class="ha">
+<a href="#strategy" class="btn bp">Explore the Strategy →</a>
+<a href="#stack" class="btn bs">The Stack</a>
+</div>
+<div class="ab">
+<span class="tr">Shishir Kamble</span><span class="dv"></span>
+<span class="l">Role</span><span class="v">Growth Manager</span><span class="dv"></span>
+<span class="l">Vertical</span><span class="v">Residential Mandate</span><span class="dv"></span>
+<span class="l">Stack</span><span class="v">OpenCode Go · ChatGPT+ · Gemini Pro · Ralph Loop</span>
+</div>
+<div class="tc" id="tc"><div class="tci">⚡ One stack to <strong>dominate the residential mandate</strong></div></div>
+</section>
 
-            <h1>
-                Command Your<br>
-                <span class="gradient-text">AI Arsenal</span>
-            </h1>
+<section id="stack">
+<p class="sl rv">● Stack</p>
+<h2 class="st rv r1">The <span class="gt">Quad-Engine</span> Arsenal</h2>
+<p class="sd rv r2">Four premium subscriptions, one unified workflow.</p>
+<div class="ss">
+<div class="sc2 rv r1"><div class="si" style="background:rgba(244,121,32,.12);color:#F47920"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h3>OpenCode Go</h3><p>AI coding agent with validated models. Builds automation pipelines and custom tools.</p></div>
+<div class="sc2 rv r2"><div class="si" style="background:rgba(58,90,140,.12);color:#4a7ab5"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>ChatGPT+</h3><p>GPT-4o generates hyper-personalized pitches and campaign content at scale.</p></div>
+<div class="sc2 rv r3"><div class="si" style="background:rgba(244,121,32,.12);color:#F47920"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 9 22 9 11 24 13 0 22 15 1 15 12 0 10 24"/></svg></div><h3>Gemini Pro</h3><p>1M+ token context. Analyzes competitors, market trends, thousands of listings.</p></div>
+<div class="sc2 rv r4"><div class="si" style="background:rgba(58,90,140,.12);color:#4a7ab5"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3>Ralph Loop</h3><p>Autonomous iterative loops for A/B testing and continuous improvement.</p></div>
+</div>
+</section>
 
-            <div class="typing-wrapper">
-                <div class="typing-text" id="typingText"></div>
-            </div>
+<section id="strategy">
+<p class="sl rv">● Strategy</p>
+<h2 class="st rv r1">Residential Mandate <span class="gt">Bullseye</span></h2>
+<p class="sd rv r2">Five strategic plays for the ground-level sales and marketing team.</p>
+<div class="stg">
+<div class="stc rv r1"><div class="nm">01</div><h3>Bullseye Targeting</h3><p>Enrich leads with demographic and behavioral data. Score and rank by mandate likelihood.</p><div class="im">25-35% increase in conversions</div></div>
+<div class="stc rv r2"><div class="nm">02</div><h3>Automated Lead Qualification</h3><p>AI-driven qualification via WhatsApp/email. Intent detection. Hot leads in minutes.</p><div class="im">3-5x lead processing capacity</div></div>
+<div class="stc rv r3"><div class="nm">03</div><h3>Personalized Pitch Generation</h3><p>Prospect profiles from public data. Tailored pitch decks and scripts. A/B testing.</p><div class="im">60-80% higher engagement</div></div>
+<div class="stc rv r4"><div class="nm">04</div><h3>Market Intelligence</h3><p>24/7 competitor tracking. Gemini Pro processes daily feeds. Threshold alerts.</p><div class="im">70% less manual research</div></div>
+<div class="stc rv r5"><div class="nm">05</div><h3>Content at Scale</h3><p>One source of truth feeds all channels. Localized. Quality pipeline. Performance loops.</p><div class="im">10-20x content output</div></div>
+</div>
+</section>
 
-            <p class="hero-subtitle">
-                Unify OpenCode, ChatGPT+, Gemini Pro, and Go into a single,
-                devastatingly effective development workflow. No tab-switching. No context loss. Just raw output.
-            </p>
+<section id="roi">
+<p class="sl rv">● ROI</p>
+<h2 class="st rv r1">Measurable <span class="gt">Impact</span></h2>
+<p class="sd rv r2">Time savings, revenue impact, and implementation timelines.</p>
+<div class="tw2 rv r3">
+<table>
+<thead><tr><th>Use Case</th><th>Time Savings</th><th>Revenue Impact</th><th>Timeline</th></tr></thead>
+<tbody>
+<tr><td>Lead Qualification</td><td>40 hrs/week</td><td>3-5x capacity</td><td>2-3 weeks</td></tr>
+<tr><td>Pitch Generation</td><td>15 hrs/week</td><td>30-40% higher closure</td><td>3-4 weeks</td></tr>
+<tr><td>Market Intelligence</td><td>20 hrs/week</td><td>Real-time insights</td><td>2 weeks</td></tr>
+<tr><td>Content Pipeline</td><td>30 hrs/week</td><td>10-20x output</td><td>1-2 weeks</td></tr>
+<tr><td>A/B Testing</td><td>10 hrs/week</td><td>25-35% better CTR</td><td>Ongoing</td></tr>
+<tr><td>CRM Enrichment</td><td>25 hrs/week</td><td>40-50% better targeting</td><td>2 weeks</td></tr>
+</tbody>
+</table>
+</div>
+</section>
 
-            <div class="hero-actions">
-                <a href="#cta" class="btn btn-primary">Deploy Your Stack →</a>
-                <a href="#skills" class="btn btn-secondary">Explore Capabilities</a>
-            </div>
+<section id="roadmap">
+<p class="sl rv">● Roadmap</p>
+<h2 class="st rv r1">Implementation <span class="gt">Timeline</span></h2>
+<p class="sd rv r2">Four phases to full deployment in 8 weeks.</p>
+<div class="rg">
+<div class="rc rv r1"><div class="ph">Phase 1</div><h3>Foundation</h3><ul><li>Set up OpenCode Go</li><li>Configure APIs</li><li>Build CRM connectors</li><li>Deploy Ralph Loop</li></ul></div>
+<div class="rc rv r2"><div class="ph" style="border-color:rgba(58,90,140,.15);background:rgba(58,90,140,.1);color:#4a7ab5">Phase 2</div><h3>Core Capabilities</h3><ul><li>Lead qualification</li><li>Personalized pitches</li><li>Market feeds</li><li>Content pipeline</li></ul></div>
+<div class="rc rv r3"><div class="ph">Phase 3</div><h3>Optimization</h3><ul><li>A/B testing loops</li><li>Competitor tracking</li><li>Auto reports</li><li>Team training</li></ul></div>
+<div class="rc rv r4"><div class="ph" style="border-color:rgba(58,90,140,.15);background:rgba(58,90,140,.1);color:#4a7ab5">Phase 4</div><h3>Scale</h3><ul><li>Additional verticals</li><li>Anarock-specific data</li><li>Custom dashboards</li><li>Continuous loops</li></ul></div>
+</div>
+</section>
 
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <div class="number" data-target="4">0</div>
-                    <div class="label">AI Engines</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="number" data-target="9000">0</div>
-                    <div class="label">UX/UI Elo</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="number" data-target="1">0</div>
-                    <div class="label">Terminal</div>
-                </div>
-            </div>
+<section class="ds" id="delta">
+<h2 class="rv">The <span class="gt">Delta Force</span> Advantage</h2>
+<p class="sd rv r1" style="margin:0 auto 36px;text-align:center">A small, highly-trained team with the best technology achieves what a force ten times its size cannot.</p>
+<div class="vp rv r2">
+<div class="vi"><div class="vic">🎯</div><h4>Faster Response</h4><p>React in hours, not weeks</p></div>
+<div class="vi"><div class="vic">💬</div><h4>Deeper Personalization</h4><p>Every prospect feels like the only one</p></div>
+<div class="vi"><div class="vic">📊</div><h4>Smarter Allocation</h4><p>Maximum ROI deployment</p></div>
+<div class="vi"><div class="vic">🧠</div><h4>Data-Driven Decisions</h4><p>AI-powered intelligence</p></div>
+<div class="vi"><div class="vic">📈</div><h4>Higher Conversions</h4><p>Redefine what's possible</p></div>
+</div>
+</section>
 
-            <div class="tilt-card" id="tiltCard">
-                <div class="tilt-card-inner">
-                    ⚡ One terminal to <strong>rule them all</strong>
-                </div>
-            </div>
-        </section>
+<section class="cta">
+<h2 class="rv">Ready to <span class="gt">Evolve</span>?</h2>
+<p class="rv r1">One terminal. Every model. Infinite potential.</p>
+<div class="ha rv r2">
+<a href="https://opencode.ai" target="_blank" class="btn bp">Install OpenCode →</a>
+<a href="https://github.com/anomalyco/opencode" target="_blank" class="btn bs">★ Star on GitHub</a>
+</div>
+</section>
 
-        <section id="skills">
-            <p class="section-label reveal">● Arsenal</p>
-            <h2 class="section-title reveal reveal-delay-1">Skills That <span class="gradient-text">Dominate</span></h2>
-            <p class="section-desc reveal reveal-delay-2">
-                OpenCode's skill system lets you inject reusable expertise into every session.
-                These aren't just prompts — they're loaded-on-demand power-ups.
-            </p>
+<footer>
+<div class="fl"><a href="https://opencode.ai/docs">Docs</a><a href="https://github.com/anomalyco/opencode">GitHub</a><a href="https://opencode.ai/discord">Discord</a><a href="https://www.anarock.com">Anarock</a></div>
+<p>NEXUS — AI Growth Engine for Anarock Property Consultants</p>
+<p style="margin-top:4px;font-size:11px">Built with opencode · go · chatgpt+ · gemini pro · ralph loop</p>
+<p style="margin-top:8px;font-size:10px;color:var(--text3)">Shishir Kamble — Growth Manager</p>
+</footer>
+</div>
 
-            <div class="skills-grid">
-                <div class="skill-card reveal reveal-delay-1">
-                    <div class="icon" style="background:rgba(108,92,231,0.1);color:#6c5ce7;">🧠</div>
-                    <h3>Agent Skills</h3>
-                    <p>SKILL.md files that agents discover and load automatically. Frontmatter-driven, permission-controlled, path-scoped. Zero friction, maximum power.</p>
-                    <div class="tags">
-                        <span>SKILL.md</span>
-                        <span>Auto-load</span>
-                        <span>Permissions</span>
-                    </div>
-                </div>
-                <div class="skill-card reveal reveal-delay-2">
-                    <div class="icon" style="background:rgba(0,206,201,0.1);color:#00cec9;">⚡</div>
-                    <h3>Multi-Agent System</h3>
-                    <p>Build, Plan, General, Explore, Scout — each agent has specialized tools and permissions. Tab-switch between them mid-conversation.</p>
-                    <div class="tags">
-                        <span>Build</span>
-                        <span>Plan</span>
-                        <span>Explore</span>
-                    </div>
-                </div>
-                <div class="skill-card reveal reveal-delay-3">
-                    <div class="icon" style="background:rgba(253,121,168,0.1);color:#fd79a8;">🔗</div>
-                    <h3>MCP Servers</h3>
-                    <p>Model Context Protocol servers connect your agent to databases, APIs, and SaaS tools. Linear, Slack, GitHub — all at your agent's fingertips.</p>
-                    <div class="tags">
-                        <span>MCP</span>
-                        <span>APIs</span>
-                        <span>Integrations</span>
-                    </div>
-                </div>
-                <div class="skill-card reveal reveal-delay-4">
-                    <div class="icon" style="background:rgba(253,203,110,0.1);color:#fdcb6e;">🎨</div>
-                    <h3>Custom Tools</h3>
-                    <p>Define your own functions the LLM can call. Execute arbitrary code, run scripts, chain workflows — extensibility is infinite.</p>
-                    <div class="tags">
-                        <span>Custom</span>
-                        <span>Scripts</span>
-                        <span>Automation</span>
-                    </div>
-                </div>
-                <div class="skill-card reveal reveal-delay-5">
-                    <div class="icon" style="background:rgba(85,239,196,0.1);color:#55efc4;">🌐</div>
-                    <h3>Any Model, Any Provider</h3>
-                    <p>75+ LLM providers via Models.dev. Use Claude, GPT, Gemini, or local models interchangeably. Your keys, your choice, zero lock-in.</p>
-                    <div class="tags">
-                        <span>75+ Providers</span>
-                        <span>Local LLMs</span>
-                        <span>Zero Lock-in</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+<div class="cp">
+<button class="ct2" id="ct2">⌘</button>
+<div class="cpn" id="cpn">
+<input id="cs" placeholder="Type a command...">
+<div class="ci" data-a="stack">⚡ <span>View Stack</span><span class="ck">⌘1</span></div>
+<div class="ci" data-a="strategy">🎯 <span>Strategy</span><span class="ck">⌘2</span></div>
+<div class="ci" data-a="roi">📊 <span>ROI</span><span class="ck">⌘3</span></div>
+<div class="ci" data-a="roadmap">🛣️ <span>Roadmap</span><span class="ck">⌘4</span></div>
+<div class="ci" data-a="delta">⚔️ <span>Delta Force</span><span class="ck">⌘5</span></div>
+<div class="ci" data-a="top">↑ <span>Top</span><span class="ck">⌘↑</span></div>
+</div>
+</div>
 
-        <section id="stack">
-            <p class="section-label reveal">● Stack</p>
-            <h2 class="section-title reveal reveal-delay-1">Your <span class="gradient-text">Quad-Engine</span> Setup</h2>
-            <p class="section-desc reveal reveal-delay-2">
-                You're not paying for four subscriptions to use them one at a time.
-                Here's how they converge into a single unbeatable workflow.
-            </p>
+<script>
+const c=document.getElementById('pc'),cx=c.getContext('2d');
+let p=[],m={x:null,y:null},aid;
+function rs(){c.width=innerWidth;c.height=innerHeight}rs();
+addEventListener('resize',rs);
+addEventListener('mousemove',e=>{m.x=e.clientX;m.y=e.clientY});
+addEventListener('touchmove',e=>{const t=e.touches[0];m.x=t.clientX;m.y=t.clientY});
+class Pt{constructor(){this.reset()}reset(){this.x=Math.random()*c.width;this.y=Math.random()*c.height;this.size=Math.random()*2+.3;this.sx=(Math.random()-.5)*.3;this.sy=(Math.random()-.5)*.3;this.o=Math.random()*.4+.05}
+update(){this.x+=this.sx;this.y+=this.sy;if(this.x<0||this.x>c.width||this.y<0||this.y>c.height)this.reset();
+if(m.x){const dx=m.x-this.x,dy=m.y-this.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<100){const f=(100-dist)/100;this.x-=dx*f*.015;this.y-=dy*f*.015}}}
+draw(){cx.beginPath();cx.arc(this.x,this.y,this.size,0,Math.PI*2);cx.fillStyle=`rgba(244,121,32,${this.o})`;cx.fill()}}
+const pc=Math.min(80,Math.floor(c.width*c.height/14000));
+for(let i=0;i<pc;i++)p.push(new Pt);
+function cn(){for(let i=0;i<p.length;i++){for(let j=i+1;j<p.length;j++){const dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<120){const o=(1-dist/120)*.12;cx.beginPath();cx.moveTo(p[i].x,p[i].y);cx.lineTo(p[j].x,p[j].y);cx.strokeStyle=`rgba(244,121,32,${o})`;cx.lineWidth=.5;cx.stroke()}}}}
+function ap(){cx.clearRect(0,0,c.width,c.height);p.forEach(x=>{x.update();x.draw()});cn();aid=requestAnimationFrame(ap)}ap();
 
-            <div class="stack-showcase">
-                <div class="stack-card gradient-border-card reveal reveal-delay-1">
-                    <div class="stack-icon" style="background:rgba(108,92,231,0.15);color:#6c5ce7;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                    </div>
-                    <h3>OpenCode</h3>
-                    <p>The conductor. Open-source AI coding agent with 160K+ GitHub stars. LSP-aware, multi-session, privacy-first.</p>
-                    <span class="stack-tag" style="background:rgba(108,92,231,0.15);color:#6c5ce7;">Conductor</span>
-                </div>
-                <div class="stack-card gradient-border-card reveal reveal-delay-2">
-                    <div class="stack-icon" style="background:rgba(0,206,201,0.15);color:#00cec9;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                    </div>
-                    <h3>Go Subscription</h3>
-                    <p>Access to validated, benchmarked models optimized for coding. No provider roulette — just reliable output.</p>
-                    <span class="stack-tag" style="background:rgba(0,206,201,0.15);color:#00cec9;">Optimized Models</span>
-                </div>
-                <div class="stack-card gradient-border-card reveal reveal-delay-3">
-                    <div class="stack-icon" style="background:rgba(253,121,168,0.15);color:#fd79a8;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                    </div>
-                    <h3>ChatGPT+</h3>
-                    <p>OpenAI's frontier models. Use GPT-4o, o3, and reasoning models directly through OpenCode's provider system.</p>
-                    <span class="stack-tag" style="background:rgba(253,121,168,0.15);color:#fd79a8;">Frontier LLMs</span>
-                </div>
-                <div class="stack-card gradient-border-card reveal reveal-delay-4">
-                    <div class="stack-icon" style="background:rgba(253,203,110,0.15);color:#fdcb6e;">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 9 22 9 11 24 13 0 22 15 1 15 12 0 10 24"/></svg>
-                    </div>
-                    <h3>Gemini Pro</h3>
-                    <p>Google's multimodal powerhouse. 1M+ token context window, native video/image understanding, routed via OpenCode.</p>
-                    <span class="stack-tag" style="background:rgba(253,203,110,0.15);color:#fdcb6e;">1M Context</span>
-                </div>
-            </div>
-        </section>
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
 
-        <section id="workflow">
-            <p class="section-label reveal">● Workflow</p>
-            <h2 class="section-title reveal reveal-delay-1">The <span class="gradient-text">Unified</span> Loop</h2>
-            <p class="section-desc reveal reveal-delay-2">
-                How four AI services become one continuous, interruption-free development experience.
-            </p>
+const mt=document.getElementById('mt'),nl=document.getElementById('nl');
+mt.addEventListener('click',()=>nl.classList.toggle('open'));
+nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nl.classList.remove('open')));
 
-            <div class="workflow">
-                <div class="workflow-step reveal reveal-delay-1">
-                    <div class="step-number">1</div>
-                    <h3>Plan with Claude</h3>
-                    <p>Use OpenCode's Plan agent (powered by Claude via Go subscription) to architect solutions before writing a single line of code.</p>
-                </div>
-                <div class="workflow-step reveal reveal-delay-2">
-                    <div class="step-number">2</div>
-                    <h3>Build with GPT</h3>
-                    <p>Switch to Build agent with GPT-4o. Generate, refactor, and optimize code at speeds that feel like cheating.</p>
-                </div>
-                <div class="workflow-step reveal reveal-delay-3">
-                    <div class="step-number">3</div>
-                    <h3>Analyze with Gemini</h3>
-                    <p>Leverage Gemini's 1M context to analyze entire codebases, process images, and understand complex systems holistically.</p>
-                </div>
-                <div class="workflow-step reveal reveal-delay-4">
-                    <div class="step-number">4</div>
-                    <h3>Ship with OpenCode</h3>
-                    <p>Git integration, undo/redo, share links, and the entire unified experience — all from one terminal. No context switching.</p>
-                </div>
-            </div>
-        </section>
+const tt=document.getElementById('tt'),ph=['OpenCode Go · ChatGPT+ · Gemini Pro · Ralph Loop','One terminal. Four AIs. Infinite edge.','Residential mandate bullseye targeting','Content at 10x. Intelligence in real-time.','The Delta Force of real estate growth.'];
+let pi=0,ci=0,del=false,sp=60;
+function ty(){const cur=ph[pi];if(!del){tt.textContent=cur.slice(0,ci+1);ci++;if(ci===cur.length){sp=1800;del=true}else sp=40+Math.random()*40}else{tt.textContent=cur.slice(0,ci-1);ci--;if(ci===0){del=false;pi=(pi+1)%ph.length;sp=350}else sp=20+Math.random()*30}
+setTimeout(ty,sp)}ty();
 
-        <section id="pulse">
-            <p class="section-label reveal">● Pulse</p>
-            <h2 class="section-title reveal reveal-delay-1">The <span class="gradient-text">Community</span> Speaks</h2>
-            <p class="section-desc reveal reveal-delay-2">
-                Real developers, real workflows. Here's how the edge is being defined.
-            </p>
+const rv=document.querySelectorAll('.rv'),ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('vi');ro.unobserve(en.target)}})},{threshold:.1});
+rv.forEach(el=>ro.observe(el));
 
-            <div class="pulse-cards">
-                <div class="pulse-card reveal reveal-delay-1">
-                    <div class="quote">"I stopped context-switching between 4 different chat UIs. OpenCode routes all my models through one terminal. It's like having a SWAT team of AIs on speed dial."</div>
-                    <div class="author">
-                        <div class="avatar">A</div>
-                        <div class="info">
-                            <div class="name">Alex Chen</div>
-                            <div class="role">Senior Full-Stack Engineer</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="pulse-card reveal reveal-delay-2">
-                    <div class="quote">"Skills are the real game-changer. I built a SKILL.md for our entire deployment pipeline. New devs run 'opencode' and the agent already knows our infra. Zero onboarding."</div>
-                    <div class="author">
-                        <div class="avatar">M</div>
-                        <div class="info">
-                            <div class="name">Maria Rodriguez</div>
-                            <div class="role">DevOps Lead</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="pulse-card reveal reveal-delay-3">
-                    <div class="quote">"When you can tab between Claude for architecture, GPT for implementation, and Gemini for code review — all in one session — you're not just faster. You're operating on a different level."</div>
-                    <div class="author">
-                        <div class="avatar">J</div>
-                        <div class="info">
-                            <div class="name">James Walker</div>
-                            <div class="role">Indie Developer</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+const tc=document.getElementById('tc');
+if(tc){const ti=tc.querySelector('.tci');tc.addEventListener('mousemove',e=>{const r=tc.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;ti.style.transform=`rotateX(${(y-r.height/2)/r.height*-10}deg) rotateY(${(x-r.width/2)/r.width*10}deg) scale3d(1.02,1.02,1.02)`});tc.addEventListener('mouseleave',()=>{ti.style.transform='rotateX(0deg) rotateY(0deg) scale3d(1,1,1)'})}
 
-        <section class="cta-section" id="cta">
-            <h2 class="reveal">Ready to <span class="gradient-text">Evolve</span>?</h2>
-            <p class="reveal reveal-delay-1">One terminal. Every model. Infinite potential. Deploy your unified AI stack today.</p>
-            <div class="cta-actions reveal reveal-delay-2">
-                <a href="https://opencode.ai" target="_blank" class="btn btn-primary">Install OpenCode →</a>
-                <a href="https://github.com/anomalyco/opencode" target="_blank" class="btn btn-secondary">★ Star on GitHub</a>
-            </div>
-        </section>
+const ctb=document.getElementById('ct2'),cpn=document.getElementById('cpn'),cs=document.getElementById('cs');
+let co=false;
+ctb.addEventListener('click',()=>{co=!co;cpn.classList.toggle('open',co);if(co)setTimeout(()=>cs.focus(),100)});
+document.addEventListener('click',e=>{if(!e.target.closest('.cp')){cpn.classList.remove('open');co=false}});
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();ctb.click()}});
+cs.addEventListener('input',()=>{const q=cs.value.toLowerCase();cpn.querySelectorAll('.ci').forEach(i=>{i.style.display=i.textContent.toLowerCase().includes(q)?'flex':'none'})});
+cpn.querySelectorAll('.ci').forEach(i=>{i.addEventListener('click',()=>{const a=i.dataset.a;cpn.classList.remove('open');co=false;
+const map={stack:'stack',strategy:'strategy',roi:'roi',roadmap:'roadmap',delta:'delta'};
+if(a==='top')window.scrollTo({top:0,behavior:'smooth'});else if(map[a])document.getElementById(map[a]).scrollIntoView({behavior:'smooth'})})});
 
-        <footer>
-            <div class="footer-links">
-                <a href="https://opencode.ai/docs">Docs</a>
-                <a href="https://github.com/anomalyco/opencode">GitHub</a>
-                <a href="https://opencode.ai/discord">Discord</a>
-                <a href="https://opencode.ai/go">Go</a>
-            </div>
-            <p>NEXUS — The AI Command Center</p>
-            <div class="made-with">
-                <span>Built with</span>
-                <span style="color:#fd79a8;">♥</span>
-                <span>by opencode · go · chatgpt+ · gemini pro</span>
-            </div>
-        </footer>
-    </div>
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.shiftKey){const map={'1':'stack','2':'strategy','3':'roi','4':'roadmap','5':'delta'},id=map[e.key];if(id){e.preventDefault();document.getElementById(id).scrollIntoView({behavior:'smooth'})}}});
 
-    <div class="cmd-palette">
-        <button class="cmd-toggle" id="cmdToggle" aria-label="Command palette">⌘</button>
-        <div class="cmd-panel" id="cmdPanel">
-            <input class="cmd-search" id="cmdSearch" placeholder="Type a command..." autofocus>
-            <div class="cmd-item" data-action="skills">🧠 <span>Browse Skills</span><span class="cmd-key">⌘K</span></div>
-            <div class="cmd-item" data-action="stack">⚡ <span>View Stack</span><span class="cmd-key">⌘S</span></div>
-            <div class="cmd-item" data-action="workflow">🔄 <span>Workflow Guide</span><span class="cmd-key">⌘W</span></div>
-            <div class="cmd-item" data-action="opencode">🌐 <span>Open OpenCode.ai</span><span class="cmd-key">⌘O</span></div>
-            <div class="cmd-item" data-action="top">↑ <span>Back to Top</span><span class="cmd-key">⌘↑</span></div>
-        </div>
-    </div>
-
-    <script>
-        // ─── Particle Network ───
-        const canvas = document.getElementById('particles-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let mouse = { x: null, y: null };
-        let animationId;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-        window.addEventListener('mousemove', e => { mouse.x = e.clientX;
-            mouse.y = e.clientY; });
-        window.addEventListener('touchmove', e => {
-            const t = e.touches[0];
-            mouse.x = t.clientX;
-            mouse.y = t.clientY;
-        });
-
-        class Particle {
-            constructor() {
-                this.reset();
-            }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.35;
-                this.speedY = (Math.random() - 0.5) * 0.35;
-                this.opacity = Math.random() * 0.5 + 0.1;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-                    this.reset();
-                }
-                if (mouse.x) {
-                    const dx = mouse.x - this.x;
-                    const dy = mouse.y - this.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 120) {
-                        const force = (120 - dist) / 120;
-                        this.x -= dx * force * 0.02;
-                        this.y -= dy * force * 0.02;
-                    }
-                }
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(108, 92, 231, ${this.opacity})`;
-                ctx.fill();
-            }
-        }
-
-        const particleCount = Math.min(100, Math.floor(canvas.width * canvas.height / 12000));
-        for (let i = 0; i < particleCount; i++) particles.push(new Particle());
-
-        function connectParticles() {
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 140) {
-                        const opacity = (1 - dist / 140) * 0.15;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(108, 92, 231, ${opacity})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update();
-                p.draw(); });
-            connectParticles();
-            animationId = requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-
-        // ─── Navbar scroll ───
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            navbar.classList.toggle('scrolled', window.scrollY > 60);
-        });
-
-        // ─── Mobile menu ───
-        const menuToggle = document.getElementById('menuToggle');
-        const navLinks = document.getElementById('navLinks');
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('open');
-        });
-        navLinks.querySelectorAll('a').forEach(a => {
-            a.addEventListener('click', () => navLinks.classList.remove('open'));
-        });
-
-        // ─── Typing effect ───
-        const typingEl = document.getElementById('typingText');
-        const phrases = [
-            'OpenCode · ChatGPT+ · Gemini Pro · Go',
-            'One terminal. Four AIs. Infinite edge.',
-            'Plan with Claude. Build with GPT. Review with Gemini.',
-            'Skills that make other devs ask "how?"',
-            'The Fablify of AI development tools.'
-        ];
-        let phraseIdx = 0;
-        let charIdx = 0;
-        let isDeleting = false;
-        let typingSpeed = 60;
-
-        function typeEffect() {
-            const current = phrases[phraseIdx];
-            if (!isDeleting) {
-                typingEl.textContent = current.slice(0, charIdx + 1);
-                charIdx++;
-                if (charIdx === current.length) {
-                    typingSpeed = 2000;
-                    isDeleting = true;
-                } else {
-                    typingSpeed = 45 + Math.random() * 40;
-                }
-            } else {
-                typingEl.textContent = current.slice(0, charIdx - 1);
-                charIdx--;
-                if (charIdx === 0) {
-                    isDeleting = false;
-                    phraseIdx = (phraseIdx + 1) % phrases.length;
-                    typingSpeed = 400;
-                } else {
-                    typingSpeed = 25 + Math.random() * 30;
-                }
-            }
-            setTimeout(typeEffect, typingSpeed);
-        }
-        typeEffect();
-
-        // ─── Animated counters ───
-        const counters = document.querySelectorAll('.number[data-target]');
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const el = entry.target;
-                    const target = parseInt(el.dataset.target);
-                    const duration = 2000;
-                    const start = performance.now();
-
-                    function updateCount(now) {
-                        const elapsed = now - start;
-                        const progress = Math.min(elapsed / duration, 1);
-                        const eased = 1 - Math.pow(1 - progress, 3);
-                        const current = Math.floor(eased * target);
-                        el.textContent = current.toLocaleString();
-                        if (progress < 1) requestAnimationFrame(updateCount);
-                        else el.textContent = target.toLocaleString();
-                    }
-                    requestAnimationFrame(updateCount);
-                    counterObserver.unobserve(el);
-                }
-            });
-        }, { threshold: 0.5 });
-        counters.forEach(c => counterObserver.observe(c));
-
-        // ─── Reveal animations ───
-        const revealEls = document.querySelectorAll('.reveal');
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        revealEls.forEach(el => revealObserver.observe(el));
-
-        // ─── 3D Tilt Card ───
-        const tiltCard = document.getElementById('tiltCard');
-        if (tiltCard) {
-            const inner = tiltCard.querySelector('.tilt-card-inner');
-            tiltCard.addEventListener('mousemove', (e) => {
-                const rect = tiltCard.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = (y - centerY) / centerY * -10;
-                const rotateY = (x - centerX) / centerX * 10;
-                inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-            });
-            tiltCard.addEventListener('mouseleave', () => {
-                inner.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-            });
-        }
-
-        // ─── Command Palette ───
-        const cmdToggle = document.getElementById('cmdToggle');
-        const cmdPanel = document.getElementById('cmdPanel');
-        const cmdSearch = document.getElementById('cmdSearch');
-        let cmdOpen = false;
-
-        cmdToggle.addEventListener('click', () => {
-            cmdOpen = !cmdOpen;
-            cmdPanel.classList.toggle('open', cmdOpen);
-            if (cmdOpen) setTimeout(() => cmdSearch.focus(), 100);
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.cmd-palette')) {
-                cmdPanel.classList.remove('open');
-                cmdOpen = false;
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                e.preventDefault();
-                cmdToggle.click();
-            }
-        });
-
-        cmdSearch.addEventListener('input', () => {
-            const q = cmdSearch.value.toLowerCase();
-            cmdPanel.querySelectorAll('.cmd-item').forEach(item => {
-                const text = item.textContent.toLowerCase();
-                item.style.display = text.includes(q) ? 'flex' : 'none';
-            });
-        });
-
-        cmdPanel.querySelectorAll('.cmd-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const action = item.dataset.action;
-                cmdPanel.classList.remove('open');
-                cmdOpen = false;
-                switch (action) {
-                    case 'skills':
-                        document.getElementById('skills').scrollIntoView({ behavior: 'smooth' });
-                        break;
-                    case 'stack':
-                        document.getElementById('stack').scrollIntoView({ behavior: 'smooth' });
-                        break;
-                    case 'workflow':
-                        document.getElementById('workflow').scrollIntoView({ behavior: 'smooth' });
-                        break;
-                    case 'opencode':
-                        window.open('https://opencode.ai', '_blank');
-                        break;
-                    case 'top':
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                        break;
-                }
-            });
-        });
-
-        // ─── Keyboard shortcuts (Cmd+1-4) ───
-        document.addEventListener('keydown', (e) => {
-            if ((e.metaKey || e.ctrlKey) && !e.shiftKey) {
-                const map = { '1': 'skills', '2': 'stack', '3': 'workflow', '4': 'pulse' };
-                const id = map[e.key];
-                if (id) {
-                    e.preventDefault();
-                    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-                }
-            }
-        });
-
-        // ─── Performance: throttle particle count on resize ───
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                cancelAnimationFrame(animationId);
-                const newCount = Math.min(100, Math.floor(canvas.width * canvas.height / 12000));
-                if (newCount !== particles.length) {
-                    if (newCount > particles.length) {
-                        while (particles.length < newCount) particles.push(new Particle());
-                    } else {
-                        particles.length = newCount;
-                    }
-                }
-                animateParticles();
-            }, 300);
-        });
-
-        console.log('NEXUS — The AI Command Center');
-        console.log('Stack: OpenCode · Go · ChatGPT+ · Gemini Pro');
-        console.log('Edge status: UNLIMITED');
-    </script>
+let rt;
+addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{cancelAnimationFrame(aid);const nc=Math.min(80,Math.floor(c.width*c.height/14000));if(nc!==p.length){if(nc>p.length)while(p.length<nc)p.push(new Pt);else p.length=nc}ap()},300)});
+</script>
 </body>
 </html>

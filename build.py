@@ -125,6 +125,20 @@ section{{padding:100px 24px;max-width:1100px;margin:0 auto;position:relative}}
 .stat-cell .num .purple{{color:var(--purple)}}
 .stat-cell .label{{font-size:12px;color:var(--text-dim);letter-spacing:1px;margin-top:8px;font-weight:500}}
 
+/* ─── LOOP CYCLE DIAGRAM ─── */
+.loop-cycle{{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:520px;margin:0 auto 60px;position:relative;opacity:0}}
+.loop-cycle::before{{content:'∞';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:clamp(120px,18vw,200px);color:rgba(151,78,142,.04);pointer-events:none;animation:spinSlow 30s linear infinite}}
+.loop-step{{padding:28px 18px;border-radius:var(--radius);background:rgba(255,255,255,.7);border:1px solid var(--border);text-align:center;position:relative;backdrop-filter:blur(4px);box-shadow:var(--shadow)}}
+.loop-step .step-icon{{width:40px;height:40px;border-radius:12px;background:rgba(151,78,142,.06);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:18px}}
+.loop-step h4{{font-size:12px;font-weight:700;margin-bottom:2px;letter-spacing:.3px}}
+.loop-step p{{font-size:11px;color:var(--text-dim);line-height:1.5}}
+.loop-step .connector{{position:absolute;font-size:14px;color:var(--purple);opacity:.2;font-family:'Instrument Serif',serif}}
+.loop-step:nth-child(1) .connector{{right:-18px;top:50%;transform:translateY(-50%)}}
+.loop-step:nth-child(2) .connector{{left:50%;bottom:-20px;transform:translateX(-50%) rotate(90deg)}}
+.loop-step:nth-child(3) .connector{{right:-18px;top:50%;transform:translateY(-50%)}}
+.loop-step:nth-child(4) .connector{{left:50%;top:-20px;transform:translateX(-50%) rotate(90deg)}}
+@media(max-width:520px){{.loop-cycle{{grid-template-columns:1fr 1fr}}.loop-step .connector{{display:none}}}}
+
 /* ─── CARDS ─── */
 .stack-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}}
 .stack-card{{padding:36px 32px;border-radius:var(--radius);background:rgba(255,255,255,.7);border:1px solid var(--border);transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease);position:relative;overflow:hidden;opacity:0;box-shadow:var(--shadow);backdrop-filter:blur(4px)}}
@@ -277,6 +291,12 @@ section{{padding:60px 16px}}.hero{{padding:100px 16px 40px;min-height:90vh}}.her
 <p class="section-label reveal">The Arsenal</p>
 <h2 class="section-title reveal reveal-1">Quad-Engine <span class="gt">Loop</span></h2>
 <p class="section-desc reveal reveal-2">Four premium engines wired in series — each feeds the next, creating an accelerating growth loop.</p>
+<div class="loop-cycle reveal reveal-3">
+<div class="loop-step"><div class="step-icon">⚡</div><h4>Build</h4><p>OpenCode Go crafts automation pipelines</p><span class="connector">→</span></div>
+<div class="loop-step"><div class="step-icon">💬</div><h4>Generate</h4><p>ChatGPT+ produces hyper-personalized output</p><span class="connector">→</span></div>
+<div class="loop-step"><div class="step-icon">🧠</div><h4>Analyze</h4><p>Gemini Pro extracts intelligence at scale</p><span class="connector">→</span></div>
+<div class="loop-step"><div class="step-icon">🔄</div><h4>Iterate</h4><p>Ralph Loop closes the cycle and improves</p></div>
+</div>
 <div class="stack-grid">
 <div class="stack-card reveal reveal-1"><div class="stack-icon">⚡</div><h3>OpenCode Go</h3><p>AI coding agent that builds automation pipelines, CRM connectors, and custom tools — validated models powering Anarock's infrastructure loop.</p></div>
 <div class="stack-card reveal reveal-2"><div class="stack-icon">💬</div><h3>ChatGPT+</h3><p>GPT-4o generates hyper-personalized pitches, marketing copy, and campaign content — each loop improves quality through reinforcement.</p></div>

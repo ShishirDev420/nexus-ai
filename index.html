@@ -21,6 +21,7 @@
 html{scrollbar-color:var(--purple) var(--paper)}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--paper)}::-webkit-scrollbar-thumb{background:var(--purple);border-radius:4px}
 body{font-family:Inter,sans-serif;background:var(--paper);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;z-index:-1;opacity:.35;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");background-size:512px 512px}
 html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}
 
 #cursor{position:fixed;width:8px;height:8px;border-radius:50%;background:var(--purple);pointer-events:none;z-index:9999;mix-blend-mode:multiply;transition:width .4s,height .4s,background .4s;transform:translate(-50%,-50%)}
@@ -84,6 +85,12 @@ nav.scrolled{background:rgba(247,243,238,.92);-webkit-backdrop-filter:blur(20px)
 
 /* ─── DECORATIVE SERIF ELEMENTS ─── */
 .serif-bg{position:absolute;font-family:'Instrument Serif',serif;font-size:clamp(120px,20vw,300px);font-weight:900;color:rgba(151,78,142,.03);line-height:1;pointer-events:none;user-select:none;z-index:0;top:0;right:0;transform:translate(10%,-20%)}
+
+/* ─── DIVIDERS ─── */
+.section-divider{display:flex;align-items:center;justify-content:center;gap:16px;padding:40px 24px;opacity:.15;font-family:'Instrument Serif',serif;font-size:13px;color:var(--purple);letter-spacing:6px;text-transform:uppercase}
+.section-divider .line{flex:1;max-width:120px;height:1px;background:var(--purple)}
+.section-divider .icon{font-size:16px;animation:spinSlow 12s linear infinite;display:inline-block}
+@keyframes spinSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
 /* ─── SECTIONS ─── */
 section{padding:100px 24px;max-width:1100px;margin:0 auto;position:relative}
@@ -216,13 +223,24 @@ section{padding:60px 16px}.hero{padding:100px 16px 40px;min-height:90vh}.hero-pl
 </div>
 </div>
 
+<!-- DIVIDER -->
+<div class="section-divider"><span class="line"></span><span class="icon">⟳</span><span class="line"></span></div>
+
 <!-- STATS -->
+<div style="padding:0 24px;max-width:1100px;margin:0 auto;position:relative">
+<p class="section-label reveal" style="text-align:center">By the Numbers</p>
+<h2 class="section-title reveal reveal-1" style="text-align:center;max-width:none">Measurable <span class="gt">Loop Impact</span></h2>
+<p class="section-desc reveal reveal-2" style="text-align:center;margin:0 auto 48px">Real results from the first 8 weeks of full deployment.</p>
+</div>
 <div class="stats-wrap"><div class="stats-grid" id="statsGrid">
 <div class="stat-cell"><div class="num"><span class="counter" data-target="40">0</span><span class="purple">+</span></div><div class="label">Hours Saved Per Week</div></div>
 <div class="stat-cell"><div class="num"><span class="counter" data-target="8">0</span><span class="purple">x</span></div><div class="label">Lead Processing Speed</div></div>
 <div class="stat-cell"><div class="num"><span class="counter" data-target="60">0</span><span class="purple">%</span></div><div class="label">Higher Engagement</div></div>
 <div class="stat-cell"><div class="num"><span class="counter" data-target="8">0</span><span class="purple">wks</span></div><div class="label">Full Deployment</div></div>
 </div></div>
+
+<!-- DIVIDER -->
+<div class="section-divider"><span class="line"></span><span class="icon">◉</span><span class="line"></span></div>
 
 <!-- STACK -->
 <section id="stack">
@@ -238,6 +256,9 @@ section{padding:60px 16px}.hero{padding:100px 16px 40px;min-height:90vh}.hero-pl
 </div>
 </section>
 
+<!-- DIVIDER -->
+<div class="section-divider"><span class="line"></span><span class="icon">∞</span><span class="line"></span></div>
+
 <!-- STRATEGY -->
 <section id="strategy">
 <div class="serif-bg">∞</div>
@@ -252,6 +273,9 @@ section{padding:60px 16px}.hero{padding:100px 16px 40px;min-height:90vh}.hero-pl
 <div class="strategy-card reveal reveal-5"><div class="num">05</div><h3>Content Loop</h3><p>One source of truth feeds all channels. Performance data cycles back — every iteration improves the output.</p><div class="metric">10–20x content output</div></div>
 </div>
 </section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><span class="line"></span><span class="icon">↻</span><span class="line"></span></div>
 
 <!-- IMPACT -->
 <section id="impact">
@@ -271,6 +295,9 @@ section{padding:60px 16px}.hero{padding:100px 16px 40px;min-height:90vh}.hero-pl
 </table>
 </div>
 </section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><span class="line"></span><span class="icon">⟳</span><span class="line"></span></div>
 
 <!-- ABOUT -->
 <section id="about">

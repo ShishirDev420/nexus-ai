@@ -4,33 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NEXUS — AI Growth Engine for Anarock</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0b0d14;--bg2:#12151e;--text:#eeeef5;--text2:#8a8ea8;--text3:#555877;--orange:#F47920;--navy:#1A2744;--accent:#F47920;--blue:#3a5a8c;--g1:linear-gradient(135deg,#F47920,#e06810);--g2:linear-gradient(135deg,#2d4b7a,#4a7ab5);--gh:linear-gradient(135deg,#F47920 0%,#4a7ab5 50%,#1A2744 100%);--glass:rgba(255,255,255,0.03);--gb:rgba(255,255,255,0.08);--r:16px;--rs:8px;--rl:24px;--t:0.4s cubic-bezier(0.22,1,0.36,1)}
+:root{--bg:#0b0d14;--bg2:#12151e;--text:#eeeef5;--text2:#8a8ea8;--text3:#555877;--orange:#F47920;--navy:#1A2744;--accent:#F47920;--blue:#3a5a8c;--g1:linear-gradient(135deg,#F47920,#e06810);--gh:linear-gradient(135deg,#F47920 0%,#4a7ab5 50%,#1A2744 100%);--glass:rgba(255,255,255,.03);--gb:rgba(255,255,255,.08);--r:16px;--rs:8px;--rl:24px;--t:.4s cubic-bezier(.22,1,.36,1)}
 html{scroll-behavior:smooth;scrollbar-color:var(--accent) var(--bg)}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
-
-/* Particle canvas */
 #pc{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
-
-/* Overlays */
-.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.01;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px}
+.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.012;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px}
 .grid{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(244,121,32,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(244,121,32,.03) 1px,transparent 1px);background-size:60px}
 .glow{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
 .g1{width:600px;height:600px;background:rgba(244,121,32,.08);top:-200px;right:-200px;animation:fg 20s ease-in-out infinite}
 .g2{width:500px;height:500px;background:rgba(26,39,68,.12);bottom:-150px;left:-150px;animation:fg 25s ease-in-out infinite reverse}
-.g3{width:400px;height:400px;background:rgba(244,121,32,.04);top:50%;left:50%;transform:translate(-50%,-50%);animation:fg 18s ease-in-out infinite 5s}
 @keyframes fg{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.05)}66%{transform:translate(-30px,50px) scale(.95)}}
-
 .wrap{position:relative;z-index:2}
 
-/* Navigation */
 nav{position:fixed;top:0;left:0;width:100%;z-index:100;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;transition:var(--t)}
 nav.scrolled{background:rgba(11,13,20,.88);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--gb);padding:10px 40px}
-.logo{font-size:20px;font-weight:800;display:flex;align-items:center;gap:10px}
-.logo svg{height:28px}.logo .o{color:var(--orange)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo svg{height:24px;width:auto}
 .nl{display:flex;gap:28px;align-items:center;list-style:none}
 .nl a{color:var(--text2);text-decoration:none;font-size:13px;font-weight:500;transition:var(--t);position:relative}
 .nl a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--g1);transition:var(--t);border-radius:2px}
@@ -40,180 +33,140 @@ nav.scrolled{background:rgba(11,13,20,.88);-webkit-backdrop-filter:blur(20px);ba
 .mt{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
 .mt span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:var(--t)}
 
-/* Hero with Loop Animation */
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 24px 60px;position:relative}
+/* ══════ 3D LOOP ANIMATION ══════ */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:100px 24px 60px;position:relative;perspective:1200px}
 
-/* Loop Animation Container */
-.loop-container{position:relative;width:420px;height:420px;margin-bottom:32px;opacity:0;animation:fu .8s .1s forwards}
-@keyframes loopRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes loopRotateReverse{from{transform:rotate(360deg)}to{transform:rotate(0deg)}}
-@keyframes pulseGlow{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
-@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.loop-scene{width:400px;height:400px;position:relative;margin-bottom:24px;transform-style:preserve-3d;animation:sceneFloat 6s ease-in-out infinite}
+@keyframes sceneFloat{0%,100%{transform:rotateX(5deg) rotateY(0deg) translateY(0)}25%{transform:rotateX(8deg) rotateY(5deg) translateY(-8px)}50%{transform:rotateX(3deg) rotateY(0deg) translateY(-4px)}75%{transform:rotateX(6deg) rotateY(-5deg) translateY(-10px)}}
 
-/* Outer ring */
-.loop-ring{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;animation:loopRotate 12s linear infinite}
-.loop-ring::before{content:'';position:absolute;inset:-2px;border-radius:50%;border:2px solid transparent;border-top-color:var(--orange);border-right-color:var(--orange);filter:blur(1px)}
+/* Ring 1 - outermost */
+.ring{position:absolute;inset:0;border-radius:50%;transform-style:preserve-3d;animation:spin1 10s linear infinite}
+@keyframes spin1{from{transform:rotateX(65deg) rotateZ(0deg)}to{transform:rotateX(65deg) rotateZ(360deg)}}
+.ring::before{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid transparent;border-top-color:var(--orange);border-right-color:rgba(244,121,32,.4);box-shadow:0 0 30px rgba(244,121,32,.15),inset 0 0 30px rgba(244,121,32,.05)}
+.ring::after{content:'';position:absolute;inset:4px;border-radius:50%;border:1px solid transparent;border-bottom-color:rgba(74,122,181,.5);border-left-color:rgba(74,122,181,.3)}
 
-/* Middle ring */
-.loop-ring-2{position:absolute;inset:40px;border-radius:50%;border:1.5px solid transparent;animation:loopRotateReverse 8s linear infinite}
-.loop-ring-2::before{content:'';position:absolute;inset:-1.5px;border-radius:50%;border:1.5px solid transparent;border-bottom-color:var(--blue);border-left-color:var(--blue);filter:blur(1px)}
+/* Ring 2 - middle */
+.ring2{position:absolute;inset:50px;border-radius:50%;transform-style:preserve-3d;animation:spin2 7s linear infinite}
+@keyframes spin2{from{transform:rotateX(70deg) rotateZ(0deg)}to{transform:rotateX(70deg) rotateZ(-360deg)}}
+.ring2::before{content:'';position:absolute;inset:0;border-radius:50%;border:1.5px solid transparent;border-top-color:rgba(74,122,181,.6);border-left-color:rgba(74,122,181,.3);box-shadow:0 0 20px rgba(74,122,181,.1)}
 
-/* Inner ring */
-.loop-ring-3{position:absolute;inset:80px;border-radius:50%;border:1px solid transparent;animation:loopRotate 6s linear infinite}
-.loop-ring-3::before{content:'';position:absolute;inset:-1px;border-radius:50%;border:1px solid transparent;border-top-color:rgba(244,121,32,.5);filter:blur(1px)}
+/* Ring 3 - innermost */
+.ring3{position:absolute;inset:100px;border-radius:50%;transform-style:preserve-3d;animation:spin3 5s linear infinite}
+@keyframes spin3{from{transform:rotateX(60deg) rotateZ(0deg)}to{transform:rotateX(60deg) rotateZ(360deg)}}
+.ring3::before{content:'';position:absolute;inset:0;border-radius:50%;border:1px solid transparent;border-top-color:rgba(244,121,32,.4);box-shadow:0 0 15px rgba(244,121,32,.08)}
 
-/* Orbiting dots */
-.orbit-dot{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 12px rgba(244,121,32,.6);animation:loopRotate 12s linear infinite}
-.orbit-dot::after{content:'';position:absolute;width:6px;height:6px;border-radius:50%;background:var(--blue);top:2px;left:2px;opacity:.5}
-.orbit-dot:nth-child(2){animation-delay:-3s;background:var(--blue);box-shadow:0 0 12px rgba(58,90,140,.6)}
-.orbit-dot:nth-child(2)::after{background:var(--orange)}
-.orbit-dot:nth-child(3){animation-delay:-6s;background:rgba(244,121,32,.6);box-shadow:0 0 8px rgba(244,121,32,.4)}
-.orbit-dot:nth-child(4){animation-delay:-9s;background:rgba(58,90,140,.6);box-shadow:0 0 8px rgba(58,90,140,.4)}
+/* Orbiting particles on rings */
+.dot-orbit{position:absolute;width:10px;height:10px;border-radius:50%;transform-style:preserve-3d}
+.dot-orbit::before{content:'';position:absolute;width:100%;height:100%;border-radius:50%;background:var(--orange);box-shadow:0 0 16px rgba(244,121,32,.7),0 0 40px rgba(244,121,32,.3)}
+.dot1{animation:spin1 10s linear infinite}
+.dot2{animation:spin2 7s linear infinite}
+.dot3{animation:spin3 5s linear infinite}
+.dot2::before{background:var(--blue);box-shadow:0 0 16px rgba(74,122,181,.7),0 0 40px rgba(74,122,181,.3)}
+.dot3::before{background:rgba(244,121,32,.6);box-shadow:0 0 12px rgba(244,121,32,.5);width:7px;height:7px}
 
-/* Glow pulse behind center */
-.loop-glow{position:absolute;inset:60px;border-radius:50%;background:radial-gradient(circle,rgba(244,121,32,.15) 0%,transparent 70%);animation:pulseGlow 3s ease-in-out infinite}
+/* Center glow */
+.center-glow{position:absolute;inset:80px;border-radius:50%;background:radial-gradient(circle,rgba(244,121,32,.12) 0%,rgba(74,122,181,.06) 40%,transparent 70%);animation:pulseGlow 3s ease-in-out infinite;transform-style:preserve-3d;transform:rotateX(65deg)}
+@keyframes pulseGlow{0%,100%{opacity:.7;transform:rotateX(65deg) scale(1)}50%{opacity:1;transform:rotateX(65deg) scale(1.08)}}
 
-/* Center logo area */
-.loop-center{position:absolute;inset:100px;border-radius:50%;background:rgba(11,13,20,.9);border:1px solid var(--gb);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:floatY 4s ease-in-out infinite;backdrop-filter:blur(8px)}
-.loop-center svg{width:160px;height:auto;margin-bottom:4px}
-.loop-center .name{font-size:14px;font-weight:700;color:var(--text);letter-spacing:2px;text-transform:uppercase;font-family:'Inter',sans-serif}
-.loop-center .role{font-size:10px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+/* Center logo platform */
+.center-platform{position:absolute;inset:110px;border-radius:50%;background:rgba(11,13,20,.92);border:1px solid var(--gb);display:flex;flex-direction:column;align-items:center;justify-content:center;transform-style:preserve-3d;transform:rotateX(0deg);backdrop-filter:blur(10px);box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 80px rgba(244,121,32,.05)}
+.center-platform .logo-wrap{width:180px;margin-bottom:2px}
+.center-platform .logo-wrap svg{width:100%;height:auto}
+.center-platform .name{font-size:13px;font-weight:700;color:var(--text);letter-spacing:2.5px;text-transform:uppercase}
+.center-platform .role{font-size:9px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px}
 
-.hb{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:50px;background:var(--glass);border:1px solid var(--gb);font-size:11px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;opacity:0;animation:fu .8s .2s forwards}
+.hb{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:50px;background:var(--glass);border:1px solid var(--gb);font-size:11px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;opacity:0;animation:fu .8s .2s forwards}
 .hb .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pd 2s ease-in-out infinite}
 @keyframes pd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
-
-.hn{font-size:clamp(14px,1.2vw,17px);color:var(--text2);font-weight:500;margin-bottom:6px;opacity:0;animation:fu .8s .3s forwards}
-.hn strong{color:var(--accent)}
-
-.hero h1{font-size:clamp(36px,8vw,76px);font-weight:900;letter-spacing:-2.5px;line-height:1.05;margin-bottom:10px;opacity:0;animation:fu .8s .35s forwards}
+.hn{font-size:clamp(13px,1.1vw,16px);color:var(--text2);font-weight:500;margin-bottom:4px;opacity:0;animation:fu .8s .3s forwards}.hn strong{color:var(--accent)}
+.hero h1{font-size:clamp(32px,7vw,68px);font-weight:900;letter-spacing:-2px;line-height:1.05;margin-bottom:8px;opacity:0;animation:fu .8s .35s forwards}
 .hero h1 .gt{background:var(--gh);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% 200%;animation:gs 6s ease-in-out infinite}
 @keyframes gs{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-
-.tw{display:inline-block;opacity:0;animation:fu .8s .4s forwards;margin-bottom:16px}
-.tt{font-size:clamp(14px,1.8vw,20px);color:var(--text2);font-weight:500;border-right:3px solid var(--accent);padding-right:6px;animation:bl .8s step-end infinite;white-space:nowrap;overflow:hidden;max-width:100%}
+.tw{display:inline-block;opacity:0;animation:fu .8s .4s forwards;margin-bottom:12px}
+.tt{font-size:clamp(13px,1.6vw,18px);color:var(--text2);font-weight:500;border-right:3px solid var(--accent);padding-right:6px;animation:bl .8s step-end infinite;white-space:nowrap;overflow:hidden}
 @keyframes bl{50%{border-color:transparent}}
-
-.hs{font-size:clamp(14px,1.4vw,17px);color:var(--text2);max-width:720px;margin-bottom:24px;opacity:0;animation:fu .8s .45s forwards;font-weight:400;line-height:1.7}
-.ha{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fu .8s .5s forwards}
-.btn{padding:13px 30px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:var(--t);display:inline-flex;align-items:center;gap:8px;font-family:inherit}
+.hs{font-size:clamp(13px,1.3vw,16px);color:var(--text2);max-width:680px;margin-bottom:20px;opacity:0;animation:fu .8s .45s forwards;line-height:1.7}
+.ha{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fu .8s .5s forwards}
+.btn{padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:var(--t);display:inline-flex;align-items:center;gap:8px;font-family:inherit}
 .bp{background:var(--g1);color:#fff;box-shadow:0 4px 20px rgba(244,121,32,.25)}.bp:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(244,121,32,.35)}
-.bs{background:var(--glass);color:var(--text);border:1px solid var(--gb)}.bs:hover{background:rgba(255,255,255,.08);transform:translateY(-3px);border-color:rgba(255,255,255,.15)}
+.bs{background:var(--glass);color:var(--text);border:1px solid var(--gb)}.bs:hover{background:rgba(255,255,255,.08);transform:translateY(-3px)}
 
-.ab{display:flex;align-items:center;justify-content:center;gap:14px;padding:14px 24px;margin-top:28px;border-radius:var(--r);background:rgba(26,39,68,.4);border:1px solid rgba(244,121,32,.15);opacity:0;animation:fu .8s .55s forwards;flex-wrap:wrap}
-.ab .dv{width:1px;height:28px;background:var(--gb)}.ab .l{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px}.ab .v{font-size:13px;font-weight:600;color:var(--text)}.ab .tr{font-size:13px;color:var(--accent);font-weight:600}
-
+.ab{display:flex;align-items:center;justify-content:center;gap:14px;padding:12px 20px;margin-top:20px;border-radius:var(--r);background:rgba(26,39,68,.4);border:1px solid rgba(244,121,32,.15);opacity:0;animation:fu .8s .55s forwards;flex-wrap:wrap}
+.ab .dv{width:1px;height:24px;background:var(--gb)}.ab .l{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px}.ab .v{font-size:12px;font-weight:600;color:var(--text)}.ab .tr{font-size:12px;color:var(--accent);font-weight:600}
 @keyframes fu{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
-/* Sections */
-section{padding:90px 24px;max-width:1200px;margin:0 auto}
-.sl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:var(--accent);margin-bottom:10px}
-.st{font-size:clamp(26px,4vw,44px);font-weight:800;letter-spacing:-1.5px;margin-bottom:12px;line-height:1.1}
-.sd{font-size:16px;color:var(--text2);max-width:640px;margin-bottom:44px;line-height:1.7}
+section{padding:80px 24px;max-width:1200px;margin:0 auto}
+.sl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:var(--accent);margin-bottom:8px}
+.st{font-size:clamp(24px,3.5vw,40px);font-weight:800;letter-spacing:-1.5px;margin-bottom:10px;line-height:1.1}
+.sd{font-size:15px;color:var(--text2);max-width:640px;margin-bottom:40px;line-height:1.7}
 
-/* Stack cards */
-.ss{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
-.sc2{padding:26px;border-radius:var(--r);background:var(--glass);border:1px solid var(--gb);text-align:center;transition:var(--t);position:relative;overflow:hidden}
+.ss{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.sc2{padding:24px;border-radius:var(--r);background:var(--glass);border:1px solid var(--gb);text-align:center;transition:var(--t);position:relative;overflow:hidden}
 .sc2::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;background:conic-gradient(from var(--angle,0deg),var(--orange),var(--blue),var(--navy),var(--orange));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:rb 4s linear infinite;opacity:0;transition:opacity .4s}
-.sc2:hover::before{opacity:1}
-.sc2:hover{transform:translateY(-6px) scale(1.02)}
-.sc2 .si{width:60px;height:60px;border-radius:16px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:26px}
-.sc2 h3{font-size:16px;font-weight:700;margin-bottom:4px}.sc2 p{font-size:12px;color:var(--text2)}
+.sc2:hover::before{opacity:1}.sc2:hover{transform:translateY(-6px) scale(1.02)}
+.sc2 .si{width:56px;height:56px;border-radius:14px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.sc2 h3{font-size:15px;font-weight:700;margin-bottom:4px}.sc2 p{font-size:12px;color:var(--text2)}
 @keyframes rb{to{--angle:360deg}}
 @property --angle{syntax:'<angle>';initial-value:0deg;inherits:false}
 
-/* Strategy cards */
-.stg{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;margin-top:36px}
-.stc{padding:30px;border-radius:var(--r);background:var(--glass);border:1px solid var(--gb);transition:var(--t);overflow:hidden}
+.stg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:32px}
+.stc{padding:28px;border-radius:var(--r);background:var(--glass);border:1px solid var(--gb);transition:var(--t);overflow:hidden}
 .stc:hover{transform:translateY(-6px);border-color:rgba(244,121,32,.2);box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.stc .nm{font-size:44px;font-weight:900;color:rgba(244,121,32,.1);line-height:1;margin-bottom:6px}
-.stc h3{font-size:17px;font-weight:700;margin-bottom:6px}
-.stc p{font-size:13px;color:var(--text2);line-height:1.7}
-.stc .im{margin-top:14px;padding:8px 14px;border-radius:var(--rs);background:rgba(244,121,32,.08);border:1px solid rgba(244,121,32,.12);font-size:12px;color:var(--accent);font-weight:600}
+.stc .nm{font-size:40px;font-weight:900;color:rgba(244,121,32,.1);line-height:1;margin-bottom:4px}
+.stc h3{font-size:16px;font-weight:700;margin-bottom:6px}.stc p{font-size:13px;color:var(--text2);line-height:1.7}
+.stc .im{margin-top:12px;padding:6px 12px;border-radius:var(--rs);background:rgba(244,121,32,.08);border:1px solid rgba(244,121,32,.12);font-size:11px;color:var(--accent);font-weight:600}
 
-/* Table */
-.tw2{overflow-x:auto;margin-top:28px;border-radius:var(--r);border:1px solid var(--gb)}
+.tw2{overflow-x:auto;margin-top:24px;border-radius:var(--r);border:1px solid var(--gb)}
 table{width:100%;border-collapse:collapse;font-size:13px}
 thead{background:rgba(26,39,68,.4)}
-th{padding:14px 18px;text-align:left;font-weight:600;color:var(--accent);font-size:11px;text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid var(--gb)}
-td{padding:12px 18px;border-bottom:1px solid var(--gb);color:var(--text2)}
-tr:hover td{background:rgba(255,255,255,.02)}
-td:first-child{font-weight:600;color:var(--text)}
+th{padding:12px 16px;text-align:left;font-weight:600;color:var(--accent);font-size:11px;text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid var(--gb)}
+td{padding:10px 16px;border-bottom:1px solid var(--gb);color:var(--text2)}
+tr:hover td{background:rgba(255,255,255,.02)}td:first-child{font-weight:600;color:var(--text)}
 
-/* Roadmap */
-.rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:36px}
-.rc{padding:26px;border-radius:var(--r);background:var(--glass);border:1px solid var(--gb);text-align:center;transition:var(--t)}
+.rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:32px}
+.rc{padding:24px;border-radius:var(--r);background:var(--glass);border:1px solid var(--gb);text-align:center;transition:var(--t)}
 .rc:hover{transform:translateY(-6px);border-color:rgba(244,121,32,.2)}
-.rc .ph{display:inline-block;padding:4px 12px;border-radius:50px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:rgba(244,121,32,.1);color:var(--accent);border:1px solid rgba(244,121,32,.15);margin-bottom:10px}
-.rc h3{font-size:17px;font-weight:700;margin-bottom:10px}
-.rc ul{list-style:none;text-align:left}
-.rc ul li{padding:3px 0;font-size:12px;color:var(--text2);padding-left:14px;position:relative}
-.rc ul li::before{content:'→';position:absolute;left:0;color:var(--accent)}
+.rc .ph{display:inline-block;padding:3px 10px;border-radius:50px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:rgba(244,121,32,.1);color:var(--accent);border:1px solid rgba(244,121,32,.15);margin-bottom:8px}
+.rc h3{font-size:16px;font-weight:700;margin-bottom:8px}.rc ul{list-style:none;text-align:left}
+.rc ul li{padding:2px 0;font-size:11px;color:var(--text2);padding-left:12px;position:relative}.rc ul li::before{content:'→';position:absolute;left:0;color:var(--accent)}
 
-/* Delta Force */
-.ds{padding:90px 24px;max-width:900px;margin:0 auto;text-align:center}
-.ds h2{font-size:clamp(26px,4vw,44px);font-weight:800;margin-bottom:16px}
-.ds .vp{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:36px}
-.ds .vp .vi{padding:18px;border-radius:var(--r);background:var(--glass);border:1px solid var(--gb);transition:var(--t)}
+.ds{padding:80px 24px;max-width:900px;margin:0 auto;text-align:center}
+.ds h2{font-size:clamp(24px,3.5vw,40px);font-weight:800;margin-bottom:14px}
+.ds .vp{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:32px}
+.ds .vp .vi{padding:16px;border-radius:var(--r);background:var(--glass);border:1px solid var(--gb);transition:var(--t)}
 .ds .vp .vi:hover{transform:translateY(-4px);border-color:rgba(244,121,32,.15)}
-.ds .vp .vi .vic{font-size:26px;margin-bottom:6px}
-.ds .vp .vi h4{font-size:14px;font-weight:700;margin-bottom:3px}
-.ds .vp .vi p{font-size:12px;color:var(--text2)}
+.ds .vp .vi .vic{font-size:24px;margin-bottom:4px}.ds .vp .vi h4{font-size:13px;font-weight:700;margin-bottom:2px}.ds .vp .vi p{font-size:11px;color:var(--text2)}
 
-/* CTA */
-.cta{text-align:center;padding:90px 24px;background:radial-gradient(ellipse at center,rgba(244,121,32,.05) 0%,transparent 70%);border-top:1px solid var(--gb);border-bottom:1px solid var(--gb)}
-.cta h2{font-size:clamp(26px,4vw,44px);font-weight:800;margin-bottom:14px}
-.cta p{font-size:16px;color:var(--text2);max-width:500px;margin:0 auto 28px}
+.cta{text-align:center;padding:80px 24px;background:radial-gradient(ellipse at center,rgba(244,121,32,.05) 0%,transparent 70%);border-top:1px solid var(--gb);border-bottom:1px solid var(--gb)}
+.cta h2{font-size:clamp(24px,3.5vw,40px);font-weight:800;margin-bottom:12px}
+.cta p{font-size:15px;color:var(--text2);max-width:500px;margin:0 auto 24px}
 
-/* Footer */
-footer{padding:36px 24px;text-align:center;border-top:1px solid var(--gb)}
-footer p{color:var(--text3);font-size:12px}
-footer .fl{display:flex;gap:20px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
-footer .fl a{color:var(--text2);text-decoration:none;font-size:12px;transition:var(--t)}
-footer .fl a:hover{color:var(--text)}
+footer{padding:32px 24px;text-align:center;border-top:1px solid var(--gb)}
+footer p{color:var(--text3);font-size:11px}
+footer .fl{display:flex;gap:16px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
+footer .fl a{color:var(--text2);text-decoration:none;font-size:11px;transition:var(--t)}footer .fl a:hover{color:var(--text)}
 
-/* Reveal */
-.rv{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}
-.rv.vi{opacity:1;transform:translateY(0)}
+.rv{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}.rv.vi{opacity:1;transform:translateY(0)}
 .r1{transition-delay:.1s}.r2{transition-delay:.2s}.r3{transition-delay:.3s}.r4{transition-delay:.4s}.r5{transition-delay:.5s}
 
-/* Command palette */
 .cp{position:fixed;bottom:24px;right:24px;z-index:200}
-.ct2{width:50px;height:50px;border-radius:50%;background:var(--g1);border:none;color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 20px rgba(244,121,32,.3);transition:var(--t);display:flex;align-items:center;justify-content:center}
-.ct2:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(244,121,32,.4)}
-.cpn{position:absolute;bottom:62px;right:0;width:320px;background:rgba(18,21,30,.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1px solid var(--gb);border-radius:var(--r);padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.5);display:none}
+.ct2{width:48px;height:48px;border-radius:50%;background:var(--g1);border:none;color:#fff;font-size:18px;cursor:pointer;box-shadow:0 4px 20px rgba(244,121,32,.3);transition:var(--t);display:flex;align-items:center;justify-content:center}
+.ct2:hover{transform:scale(1.1)}
+.cpn{position:absolute;bottom:58px;right:0;width:300px;background:rgba(18,21,30,.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1px solid var(--gb);border-radius:var(--r);padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);display:none}
 .cpn.open{display:block;animation:fu .25s}
-.cpn input{width:100%;padding:10px 12px;border-radius:var(--rs);background:var(--bg2);border:1px solid var(--gb);color:var(--text);font-size:13px;font-family:inherit;outline:none;margin-bottom:10px}
+.cpn input{width:100%;padding:8px 10px;border-radius:var(--rs);background:var(--bg2);border:1px solid var(--gb);color:var(--text);font-size:12px;font-family:inherit;outline:none;margin-bottom:8px}
 .cpn input:focus{border-color:var(--accent)}
-.cpn .ci{padding:9px 12px;border-radius:var(--rs);cursor:pointer;transition:var(--t);display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)}
+.cpn .ci{padding:8px 10px;border-radius:var(--rs);cursor:pointer;transition:var(--t);display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)}
 .cpn .ci:hover{background:rgba(244,121,32,.1);color:var(--text)}
-.cpn .ci .ck{margin-left:auto;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.05);font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3)}
+.cpn .ci .ck{margin-left:auto;padding:2px 5px;border-radius:3px;background:rgba(255,255,255,.05);font-size:9px;font-family:monospace;color:var(--text3)}
 
-/* Tilt card */
-.tc{perspective:1000px;display:inline-block;margin-top:20px}
-.tci{padding:16px 28px;border-radius:var(--rl);background:var(--glass);border:1px solid var(--gb);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transform-style:preserve-3d;transition:transform .3s ease;font-size:14px;color:var(--text2);font-weight:500}
-.tci strong{color:var(--accent)}
-
-/* Responsive */
 @media(max-width:768px){
-nav{padding:14px 20px}
-.nl{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(11,13,20,.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);flex-direction:column;padding:20px;gap:14px;border-bottom:1px solid var(--gb)}
-.nl.open{display:flex}.mt{display:flex}section{padding:50px 16px}
-.cpn{width:calc(100vw - 40px);right:-10px}
-.ab{flex-direction:column;gap:6px}.ab .dv{display:none}
-.loop-container{width:300px;height:300px}
-.loop-center{inset:70px}
-.loop-center svg{width:110px}
-.loop-center .name{font-size:11px}
+nav{padding:12px 16px}.nl{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(11,13,20,.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);flex-direction:column;padding:16px;gap:12px;border-bottom:1px solid var(--gb)}
+.nl.open{display:flex}.mt{display:flex}section{padding:40px 16px}
+.loop-scene{width:280px;height:280px}.center-platform{inset:80px}.center-platform .logo-wrap{width:120px}.center-platform .name{font-size:10px;letter-spacing:1.5px}
+.ab{flex-direction:column;gap:4px}.ab .dv{display:none}
 }
-@media(max-width:480px){
-.hero h1{font-size:30px;letter-spacing:-1px}
-.ss,.stg{grid-template-columns:1fr}
-.loop-container{width:260px;height:260px}
-.loop-center{inset:60px}
-.loop-center svg{width:90px}
-.loop-center .name{font-size:10px}
-}
+@media(max-width:480px){.hero h1{font-size:28px;letter-spacing:-1px}.ss,.stg{grid-template-columns:1fr}.loop-scene{width:240px;height:240px}.center-platform{inset:65px}.center-platform .logo-wrap{width:100px}}
 </style>
 </head>
 <body>
@@ -222,13 +175,11 @@ nav{padding:14px 20px}
 <div class="grid"></div>
 <div class="glow g1"></div>
 <div class="glow g2"></div>
-<div class="glow g3"></div>
 
 <div class="wrap">
 <nav id="nav">
 <div class="logo">
 <svg viewBox="0 0 234 42" fill="none"><path d="M18 30H6V18H18V30Z" fill="#F47920"/><path d="M18 12H6V30H18V12ZM24 36H0V6H24V36Z" fill="#4A7AB5"/><path d="M48 30H36V18H48V30Z" fill="#F47920"/><path d="M36 30H48V12H36V30ZM54 36H36V42H30V6H54V36Z" fill="#4A7AB5"/><path d="M84 24V30H66V24H84Z" fill="#F47920"/><path d="M84 24H66V30H84V36H60V6H84V24ZM66 18H78V12H66V18Z" fill="#4A7AB5"/><path d="M108 36H96V18H108V36Z" fill="#F47920"/><path d="M108 12H96V36H90V6H108V12ZM114 36H108V12H114V36Z" fill="#4A7AB5"/><path d="M144 30H126V18H144V30Z" fill="#F47920"/><path d="M144 12H126V30H144V36H120V6H144V12Z" fill="#1A2744"/><path d="M168 30H156V18H168V30Z" fill="#F47920"/><path d="M168 12H156V30H168V12ZM174 36H150V6H174V36Z" fill="#1A2744"/><path d="M198 30H186V18H198V30Z" fill="#F47920"/><path d="M198 12H186V30H198V12ZM204 36H180V6H198V0H204V36Z" fill="#1A2744"/><path d="M234 24V30H216V24H234Z" fill="#F47920"/><path d="M216 12V18H228V12H216ZM234 24H216V30H234V36H210V6H234V24Z" fill="#1A2744"/></svg>
-ANAROCK <span class="o">·</span> NEXUS
 </div>
 <button class="mt" id="mt"><span></span><span></span><span></span></button>
 <ul class="nl" id="nl">
@@ -236,35 +187,54 @@ ANAROCK <span class="o">·</span> NEXUS
 <li><a href="#strategy">Strategy</a></li>
 <li><a href="#roi">ROI</a></li>
 <li><a href="#roadmap">Roadmap</a></li>
-<li><a href="#delta" class="nc">Delta Force</a></li>
+<li><a href="#about" class="nc">About Shishir</a></li>
 </ul>
 </nav>
 
 <section class="hero">
-<!-- Loop Animation -->
-<div class="loop-container">
-<div class="loop-ring"></div>
-<div class="loop-ring-2"></div>
-<div class="loop-ring-3"></div>
-<div class="orbit-dot" style="top:0;left:50%;transform:translateX(-50%)"></div>
-<div class="orbit-dot" style="top:50%;right:0;transform:translateY(-50%)"></div>
-<div class="orbit-dot" style="bottom:0;left:50%;transform:translateX(-50%)"></div>
-<div class="orbit-dot" style="top:50%;left:0;transform:translateY(-50%)"></div>
-<div class="loop-glow"></div>
-<div class="loop-center">
-<svg viewBox="0 0 234 42" fill="none"><path d="M18 30H6V18H18V30Z" fill="#F47920"/><path d="M18 12H6V30H18V12ZM24 36H0V6H24V36Z" fill="#4A7AB5"/><path d="M48 30H36V18H48V30Z" fill="#F47920"/><path d="M36 30H48V12H36V30ZM54 36H36V42H30V6H54V36Z" fill="#4A7AB5"/><path d="M84 24V30H66V24H84Z" fill="#F47920"/><path d="M84 24H66V30H84V36H60V6H84V24ZM66 18H78V12H66V18Z" fill="#4A7AB5"/><path d="M108 36H96V18H108V36Z" fill="#F47920"/><path d="M108 12H96V36H90V6H108V12ZM114 36H108V12H114V36Z" fill="#4A7AB5"/><path d="M144 30H126V18H144V30Z" fill="#F47920"/><path d="M144 12H126V30H144V36H120V6H144V12Z" fill="#1A2744"/><path d="M168 30H156V18H168V30Z" fill="#F47920"/><path d="M168 12H156V30H168V12ZM174 36H150V6H174V36Z" fill="#1A2744"/><path d="M198 30H186V18H198V30Z" fill="#F47920"/><path d="M198 12H186V30H198V12ZM204 36H180V6H198V0H204V36Z" fill="#1A2744"/><path d="M234 24V30H216V24H234Z" fill="#F47920"/><path d="M216 12V18H228V12H216ZM234 24H216V30H234V36H210V6H234V24Z" fill="#1A2744"/></svg>
+<div class="loop-scene">
+<div class="ring"></div>
+<div class="ring2"></div>
+<div class="ring3"></div>
+<div class="dot-orbit dot1"></div>
+<div class="dot-orbit dot2"></div>
+<div class="dot-orbit dot3"></div>
+<div class="center-glow"></div>
+<div class="center-platform">
+<div class="logo-wrap">
+<svg viewBox="0 0 923 264" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0 C3.918 1.959 5.895 3.675 8.922 6.762 C9.617 7.465 9.617 7.465 10.327 8.183 C11.806 9.68 13.279 11.183 14.75 12.688 C16.208 14.173 17.667 15.658 19.13 17.139 C20.469 18.495 21.802 19.856 23.136 21.218 C25.28 23.3 27.43 25.254 29.694 27.197 C34.824 31.645 39.566 36.461 44.344 41.281 C45.322 42.264 46.3 43.246 47.279 44.228 C50.875 47.837 54.466 51.452 58.057 55.067 C61.104 58.134 64.153 61.198 67.204 64.26 C68.618 65.68 70.028 67.103 71.438 68.526 C75.931 73.036 80.468 77.413 85.321 81.537 C86.946 82.953 88.476 84.476 90 86 C90.33 59.27 90.66 32.54 91 5 C99.25 5 107.5 5 116 5 C116 51.2 116 97.4 116 145 C108.127 138.252 108.127 138.252 105.395 135.492 C104.473 134.566 104.473 134.566 103.533 133.621 C102.894 132.974 102.256 132.327 101.598 131.66 C100.916 130.975 100.235 130.29 99.533 129.584 C96.648 126.683 93.77 123.777 90.891 120.87 C88.774 118.736 86.655 116.604 84.535 114.473 C83.898 113.828 83.262 113.183 82.606 112.518 C79.509 109.404 76.365 106.408 73.039 103.539 C68.772 99.854 64.805 95.915 60.844 91.906 C60.097 91.156 59.351 90.406 58.581 89.632 C55.423 86.458 52.271 83.277 49.118 80.097 C46.799 77.761 44.478 75.427 42.156 73.094 C41.457 72.386 40.758 71.679 40.037 70.95 C39.363 70.272 38.689 69.595 37.994 68.896 C37.414 68.311 36.834 67.726 36.237 67.123 C32.922 63.977 29.44 61.01 26 58 C25.67 85.06 25.34 112.12 25 140 C16.75 140 8.5 140 0 140 C0 93.8 0 47.6 0 0 Z" fill="#F47920" transform="translate(151,12)"/>
+<path d="M0 0 C12.852 -.389 24.827 2.043 36.16 8.152 C37.012 8.606 37.864 9.06 38.742 9.527 C54.717 18.558 65.765 33.212 70.997 50.781 C76.14 69.866 73.317 88.66 64.074 105.965 C54.204 122.401 39.335 133.305 21 138.461 C20.063 138.689 19.126 138.917 18.16 139.152 C17.394 139.343 16.629 139.534 15.84 139.73 C-3.628 142.795 -22.679 138.218 -38.84 127.086 C-52.896 116.173 -62.239 101.608 -65.84 84.152 C-66.067 83.059 -66.294 81.966 -66.527 80.84 C-68.219 60.882 -64.478 41.753 -51.504 26.004 C-50.955 25.393 -50.406 24.782 -49.84 24.152 C-49.146 23.356 -48.453 22.559 -47.738 21.738 C-35.361 8.393 -18.075 .97 0 0 Z M-31.84 38.152 C-41.38 49.565 -44.977 62.432 -43.84 77.152 C-41.309 90.235 -34.788 101.419 -23.84 109.152 C-11.725 116.244 .082 118.943 14.035 116.688 C25.192 113.666 36.207 107.313 42.307 97.263 C49.207 84.876 52.275 73.007 49.512 58.824 C45.7 46.38 38.454 36.065 27.2 29.398 C7.416 19.058 -16.09 21.355 -31.84 38.152 Z" fill="#F47920" transform="translate(589.84,13.85)"/>
+<path d="M0 0 C71.573 0 71.573 0 84.195 12.105 C93.821 22.424 96.555 33.005 96.242 46.84 C95.766 57.365 91.344 66.89 83.684 74.215 C80.231 76.996 77.421 79.182 73 80 C75.703 85.918 78.841 91.502 82.313 97 C82.721 97.647 83.129 98.293 83.55 98.96 C84.48 100.431 85.41 101.902 86.341 103.373 C89.42 108.249 92.479 113.138 95.521 118.038 C96.255 119.218 96.993 120.398 97.732 121.575 C98.778 123.24 99.815 124.911 100.852 126.582 C101.458 127.554 102.065 128.525 102.69 129.527 C104 132 104 132 104 135 C94.752 137.07 85.004 138.617 76 135 C68.9 129.111 65.004 119.584 61.051 111.465 C60.708 110.767 60.365 110.069 60.011 109.349 C57.993 105.196 56.176 101.038 54.588 96.7 C52.877 93.49 50.328 90.795 48 88 C40.41 87.67 32.82 87.34 25 87 C25 102.84 25 118.68 25 135 C16.75 135 8.5 135 0 135 C0 90.45 0 45.9 0 0 Z M25 22 C25 35.86 25 49.72 25 64 C32.425 64.124 32.425 64.124 40 64.25 C41.546 64.286 43.091 64.323 44.684 64.36 C52.701 64.425 59.305 64.412 65.503 58.587 C70.664 52.851 71.454 47.471 71.316 40.012 C70.73 34.432 68.622 30.715 64.813 26.688 C56.348 21.609 48.115 21.621 38.438 21.813 C34.003 21.874 29.569 21.936 25 22 Z" fill="#F47920" transform="translate(418,17)"/>
+<path d="M0 0 C8.25 0 16.5 0 25 0 C25.33 20.13 25.66 40.26 26 61 C32.124 54.32 37.869 47.972 43.488 40.98 C47.11 36.683 50.98 32.636 54.84 28.554 C58.269 24.911 61.551 21.215 64.688 17.313 C65.409 16.457 66.131 15.601 66.875 14.719 C69.108 11.99 69.108 11.99 70.938 8.656 C73.41 4.776 75.674 1.837 80 0 C89.881 -1.5 100.077 -.733 110 0 C107.151 4.527 104.003 8.328 100.313 12.188 C96.573 16.162 92.971 20.171 89.563 24.438 C84.985 30.14 80.022 35.432 75.023 40.762 C72.091 43.891 69.224 47.068 66.438 50.328 C65.461 51.464 64.46 52.578 63.438 53.672 C61.828 55.381 61.828 55.381 60 58 C60.36 61.019 61.511 63.037 63.266 65.477 C63.972 66.468 63.972 66.468 64.693 67.48 C65.207 68.188 65.721 68.896 66.25 69.625 C66.784 70.371 67.319 71.118 67.869 71.887 C69.573 74.263 71.285 76.632 73 79 C74.089 80.508 75.177 82.016 76.266 83.523 C77.89 85.772 79.514 88.02 81.142 90.266 C85.294 96.003 89.388 101.778 93.456 107.575 C96.142 111.393 98.856 115.188 101.605 118.961 C102.203 119.781 102.8 120.602 103.416 121.447 C104.574 123.034 105.735 124.619 106.9 126.201 C107.422 126.916 107.943 127.631 108.48 128.367 C108.943 128.997 109.406 129.628 109.884 130.277 C111 132 111 132 112 135 C86.628 137.67 86.628 137.67 79.611 133.622 C75.777 129.88 73.537 125.233 71.253 120.442 C69.141 116.326 66.338 112.748 63.563 109.063 C62.481 107.575 61.403 106.085 60.328 104.594 C59.787 103.847 59.247 103.101 58.689 102.332 C55.728 98.244 52.77 94.153 49.813 90.063 C49.26 89.299 48.707 88.535 48.137 87.748 C47.624 87.039 47.111 86.329 46.582 85.598 C46.131 84.974 45.679 84.35 45.214 83.707 C44.113 82.159 43.054 80.581 42 79 C38.665 80.112 37.896 80.995 35.688 83.625 C34.858 84.603 34.858 84.603 34.012 85.602 C33.348 86.393 32.684 87.185 32 88 C31.511 88.473 31.023 88.946 30.519 89.434 C26.594 93.437 25.304 96.299 25.168 101.892 C25.177 102.731 25.186 103.569 25.195 104.434 C25.182 105.312 25.168 106.189 25.154 107.094 C25.117 109.876 25.12 112.656 25.125 115.438 C25.107 117.333 25.086 119.228 25.063 121.123 C25.006 125.75 25.004 130.372 25 135 C16.75 135 8.5 135 0 135 C0 90.45 0 45.9 0 0 Z" fill="#F47920" transform="translate(802,17)"/>
+<path d="M0 0 C2.91 3.505 4.758 7.409 6.668 11.508 C7.02 12.253 7.371 12.998 7.734 13.765 C8.889 16.217 10.038 18.671 11.188 21.125 C11.997 22.846 12.808 24.567 13.619 26.288 C15.28 29.816 16.938 33.344 18.594 36.874 C20.786 41.546 22.984 46.215 25.184 50.883 C27.811 56.46 30.436 62.038 33.059 67.617 C35.735 73.312 38.415 79.004 41.098 84.695 C44.75 92.444 48.397 100.195 52.037 107.95 C52.683 109.324 53.329 110.699 53.974 112.074 C55.846 116.056 57.713 120.041 59.574 124.028 C60.415 125.828 61.26 127.626 62.104 129.423 C62.605 130.498 63.105 131.573 63.621 132.68 C64.277 134.083 64.277 134.083 64.947 135.515 C66 138 66 138 67 142 C58.09 142 49.18 142 40 142 C38.185 138.081 36.37 134.163 34.5 130.125 C33.926 128.89 33.351 127.655 32.76 126.383 C32.313 125.414 31.866 124.444 31.406 123.445 C30.945 122.45 30.485 121.455 30.01 120.43 C29 118 29 118 29 116 C9.86 116 -9.28 116 -29 116 C-29.33 117.65 -29.66 119.3 -30 121 C-30.71 122.717 -31.475 124.411 -32.285 126.082 C-32.689 126.922 -33.092 127.762 -33.508 128.628 C-34.021 129.679 -34.534 130.73 -35.063 131.813 C-36.692 135.174 -38.321 138.536 -40 142 C-48.91 142 -57.82 142 -67 142 C-65.571 137.712 -64.165 134.06 -62.2 130.055 C-61.641 128.911 -61.084 127.767 -60.509 126.589 C-60.213 125.985 -59.917 125.382 -59.612 124.76 C-58.01 121.494 -56.423 118.222 -54.836 114.949 C-54.511 114.279 -54.186 113.608 -53.85 112.918 C-50.765 106.541 -47.778 100.121 -44.813 93.688 C-38.748 80.549 -32.548 67.477 -26.328 54.412 C-25.517 52.708 -24.706 51.005 -23.895 49.301 C-23.492 48.455 -23.089 47.609 -22.674 46.737 C-19.793 40.679 -16.929 34.613 -14.074 28.543 C-13.681 27.706 -13.287 26.87 -12.881 26.008 C-10.603 21.167 -10.603 21.167 -8.33 16.324 C-7.304 14.136 -6.275 11.949 -5.246 9.762 C-4.945 9.117 -4.644 8.472 -4.333 7.807 C-3.032 5.047 -1.698 2.547 0 0 Z M0 53 C-2.568 58.515 -5.132 64.033 -7.69 69.553 C-8.562 71.431 -9.435 73.309 -10.31 75.187 C-11.564 77.881 -12.814 80.577 -14.063 83.273 C-14.456 84.116 -14.85 84.959 -15.256 85.827 C-15.616 86.608 -15.976 87.389 -16.348 88.193 C-16.667 88.881 -16.987 89.57 -17.317 90.279 C-18.123 92.001 -18.123 92.001 -18 94 C-5.79 94 6.42 94 19 94 C17.324 88.947 17.324 88.947 15.304 84.106 C14.984 83.406 14.664 82.705 14.334 81.984 C13.994 81.249 13.655 80.515 13.305 79.758 C12.952 78.989 12.6 78.221 12.237 77.429 C11.119 74.993 9.997 72.559 8.875 70.125 C8.113 68.466 7.351 66.807 6.59 65.148 C4.73 61.097 2.866 57.048 1 53 C.67 53 .34 53 0 53 Z" fill="#F47920" transform="translate(76,10)"/>
+<path d="M0 0 C3.385 2.762 4.877 6.539 6.668 10.41 C7.02 11.157 7.371 11.903 7.734 12.672 C8.891 15.133 10.039 17.598 11.188 20.063 C11.997 21.788 12.808 23.514 13.619 25.239 C15.281 28.777 16.939 32.317 18.594 35.858 C20.783 40.538 22.981 45.214 25.184 49.887 C27.813 55.465 30.44 61.044 33.063 66.625 C36.066 73.015 39.073 79.403 42.083 85.79 C44.741 91.433 47.395 97.077 50.047 102.723 C52.056 106.998 54.073 111.269 56.094 115.538 C57.419 118.337 58.739 121.138 60.058 123.94 C60.681 125.261 61.306 126.581 61.933 127.9 C62.794 129.711 63.647 131.525 64.5 133.34 C64.985 134.365 65.469 135.389 65.969 136.445 C67 139 67 139 67 142 C58.42 142 49.84 142 41 142 C39.763 139.546 38.525 137.091 37.25 134.563 C36.869 133.809 36.488 133.056 36.095 132.28 C33.564 127.237 31.298 122.17 29 117 C10.19 117 -8.62 117 -28 117 C-33.445 128.88 -33.445 128.88 -39 141 C-40 142 -40 142 -42.5 142.114 C-43.584 142.108 -44.668 142.103 -45.785 142.098 C-46.955 142.094 -48.125 142.091 -49.33 142.088 C-50.562 142.08 -51.793 142.071 -53.063 142.063 C-54.916 142.056 -54.916 142.056 -56.807 142.049 C-59.871 142.037 -62.936 142.021 -66 142 C-65.377 137.982 -64.093 134.792 -62.297 131.152 C-61.736 130.005 -61.175 128.858 -60.597 127.677 C-60.297 127.069 -59.996 126.461 -59.687 125.835 C-58.069 122.558 -56.471 119.271 -54.871 115.984 C-54.543 115.311 -54.215 114.637 -53.876 113.943 C-50.773 107.563 -47.781 101.132 -44.813 94.688 C-38.748 81.548 -32.546 68.477 -26.328 55.41 C-25.517 53.706 -24.706 52.001 -23.895 50.297 C-23.492 49.451 -23.089 48.604 -22.674 47.733 C-17.509 36.873 -12.381 25.997 -7.255 15.119 C-6.915 14.398 -6.575 13.676 -6.224 12.933 C-5.593 11.596 -4.963 10.258 -4.333 8.921 C-2.923 5.929 -1.496 2.949 0 0 Z M0 52 C-2.246 57.015 -4.488 62.033 -6.726 67.051 C-7.487 68.757 -8.25 70.462 -9.013 72.167 C-10.113 74.623 -11.209 77.081 -12.305 79.539 C-12.814 80.674 -12.814 80.674 -13.334 81.831 C-13.654 82.552 -13.974 83.272 -14.304 84.014 C-14.724 84.953 -14.724 84.953 -15.152 85.912 C-16.227 88.56 -17.096 91.288 -18 94 C-5.79 94 6.42 94 19 94 C17.309 88.915 17.309 88.915 15.304 84.014 C14.824 82.934 14.824 82.934 14.334 81.831 C13.994 81.075 13.655 80.318 13.305 79.539 C12.952 78.748 12.6 77.958 12.237 77.143 C11.119 74.636 9.997 72.131 8.875 69.625 C8.113 67.918 7.351 66.211 6.59 64.504 C4.73 60.335 2.866 56.167 1 52 C.67 52 .34 52 0 52 Z" fill="#F47920" transform="translate(342,10)"/>
+<path d="M0 0 C1.026.973 2.042 1.959 3 3 C1.679 5.932 .254 7.987 -2.039 10.234 C-2.619 10.808 -3.2 11.382 -3.797 11.973 C-4.4 12.559 -5.003 13.146 -5.625 13.75 C-6.236 14.352 -6.847 14.954 -7.477 15.574 C-8.98 17.054 -10.489 18.528 -12 20 C-14.934 18.619 -17.487 17.004 -20.125 15.125 C-30.358 8.219 -40.77 6.043 -53 7 C-65.792 9.582 -77.065 15.574 -84.656 26.352 C-91.918 37.85 -94.438 49.617 -91.938 63.125 C-90.133 70.543 -87.296 77.722 -81.809 83.18 C-80 85 -80 85 -80 87 C-79.423 87.271 -78.845 87.541 -78.25 87.82 C-75.988 89.006 -74.06 90.369 -72 91.875 C-60.633 99.404 -47.779 100.978 -34.563 98.305 C-28.779 96.549 -23.918 94.012 -19.035 90.465 C-16.781 88.842 -14.382 87.429 -12 86 C-7.05 90.95 -2.1 95.9 3 101 C-2.039 111.078 -13.462 116.379 -23.75 119.813 C-41.899 125.679 -61.202 124.305 -78.438 116.188 C-83.764 113.309 -88.463 110.001 -93 106 C-93.75 105.344 -94.5 104.688 -95.273 104.012 C-106.506 93.527 -115.049 78.119 -116.177 62.559 C-116.707 40.486 -113.494 21.854 -98 5 C-71.039 -23.135 -30.06 -23.096 0 0 Z" fill="#F47920" transform="translate(787,31)"/>
+<path d="M0 0 C298.65 0 597.3 0 905 0 C905 2.31 905 4.62 905 7 C606.35 7 307.7 7 0 7 C0 4.69 0 2.38 0 0 Z" fill="#F47920" transform="translate(9,181)"/>
+<path d="M0 0 C3.254 4.153 5.453 8.584 7.75 13.313 C8.386 14.557 8.386 14.557 9.035 15.826 C11.536 20.986 12.7 24.288 11 30 C9.726 33.119 8.268 36.119 6.75 39.125 C4.123 44.38 1.721 49.614 -.336 55.121 C-3.011 62.215 -6.156 69.037 -9.401 75.884 C-10.371 77.93 -11.335 79.979 -12.297 82.029 C-15.899 89.682 -19.606 97.269 -23.456 104.8 C-25.106 108.22 -26.503 111.648 -27.875 115.188 C-31.436 124.362 -35.729 133.134 -40 142 C-48.91 142 -57.82 142 -67 142 C-65.571 137.712 -64.165 134.06 -62.2 130.055 C-61.641 128.911 -61.084 127.767 -60.509 126.589 C-60.213 125.985 -59.917 125.382 -59.612 124.76 C-58.01 121.494 -56.423 118.222 -54.836 114.949 C-54.511 114.279 -54.186 113.608 -53.85 112.918 C-50.765 106.541 -47.778 100.121 -44.813 93.688 C-38.748 80.549 -32.548 67.477 -26.328 54.412 C-25.517 52.708 -24.706 51.005 -23.895 49.301 C-23.492 48.455 -23.089 47.609 -22.674 46.737 C-19.793 40.679 -16.929 34.613 -14.074 28.543 C-13.681 27.706 -13.287 26.87 -12.881 26.008 C-10.603 21.167 -10.603 21.167 -8.33 16.324 C-7.304 14.136 -6.275 11.949 -5.246 9.762 C-4.945 9.117 -4.644 8.472 -4.333 7.807 C-3.032 5.047 -1.698 2.547 0 0 Z M0 52 C-2.246 57.015 -4.488 62.033 -6.726 67.051 C-7.487 68.757 -8.25 70.462 -9.013 72.167 C-10.113 74.623 -11.209 77.081 -12.305 79.539 C-12.814 80.674 -12.814 80.674 -13.334 81.831 C-13.654 82.552 -13.974 83.272 -14.304 84.014 C-14.724 84.953 -14.724 84.953 -15.152 85.912 C-16.227 88.56 -17.096 91.288 -18 94 C-5.79 94 6.42 94 19 94 C17.309 88.915 17.309 88.915 15.304 84.014 C14.824 82.934 14.824 82.934 14.334 81.831 C13.994 81.075 13.655 80.318 13.305 79.539 C12.952 78.748 12.6 77.958 12.237 77.143 C11.119 74.636 9.997 72.131 8.875 69.625 C8.113 67.918 7.351 66.211 6.59 64.504 C4.73 60.335 2.866 56.167 1 52 C.67 52 .34 52 0 52 Z" fill="#F47920" transform="translate(76,10)"/>
+<path d="M0 0 C2.97 0 5.94 0 9 0 C9.472 1.143 9.472 1.143 9.953 2.309 C10.381 3.341 10.809 4.374 11.25 5.438 C11.668 6.447 12.085 7.456 12.516 8.496 C14.291 12.687 16.152 16.841 18 21 C20.64 14.07 23.28 7.14 26 0 C28.97 0 31.94 0 35 0 C34.395 4.687 33.066 8.803 31.277 13.148 C30.88 14.135 30.88 14.135 30.475 15.141 C29.635 17.221 28.786 19.298 27.938 21.375 C27.363 22.793 26.79 24.211 26.217 25.629 C24.818 29.089 23.411 32.545 22 36 C19.36 36 16.72 36 14 36 C10.46 28.41 7.224 20.742 4.188 12.938 C3.781 11.907 3.374 10.876 2.955 9.814 C2.572 8.833 2.188 7.851 1.793 6.84 C1.275 5.515 1.275 5.515 .747 4.164 C0 2 0 2 0 0 Z" fill="#F47920" transform="translate(593,217)"/>
+<path d="M0 0 C2.97 0 5.94 0 9 0 C9.472 1.143 9.472 1.143 9.953 2.309 C10.381 3.341 10.809 4.374 11.25 5.438 C11.668 6.447 12.085 7.456 12.516 8.496 C14.291 12.687 16.152 16.841 18 21 C20.64 14.07 23.28 7.14 26 0 C28.97 0 31.94 0 35 0 C34.395 4.687 33.066 8.803 31.277 13.148 C30.88 14.135 30.88 14.135 30.475 15.141 C29.635 17.221 28.786 19.298 27.938 21.375 C27.363 22.793 26.79 24.211 26.217 25.629 C24.818 29.089 23.411 32.545 22 36 C19.36 36 16.72 36 14 36 C10.463 29.233 7.577 22.277 4.75 15.188 C4.291 14.056 3.832 12.925 3.359 11.76 C2.926 10.678 2.493 9.595 2.047 8.48 C1.653 7.5 1.26 6.519 .854 5.509 C0 3 0 3 0 0 Z" fill="#F47920" transform="translate(446,217)"/>
+<path d="M0 0 C2.97 0 5.94 0 9 0 C11.64 6.93 14.28 13.86 17 21 C18.114 18.308 18.114 18.308 19.25 15.563 C21.425 10.339 23.678 5.16 26 0 C28.97 0 31.94 0 35 0 C32.77 7.908 29.959 15.451 26.875 23.063 C26.42 24.201 25.965 25.34 25.496 26.514 C22.136 34.864 22.136 34.864 21 36 C18.329 36.141 15.676 36.042 13 36 C11.142 31.358 9.291 26.713 7.446 22.066 C6.817 20.485 6.187 18.905 5.554 17.325 C4.646 15.056 3.744 12.784 2.844 10.512 C2.559 9.805 2.275 9.099 1.982 8.371 C.822 5.427 0 3.196 0 0 Z" fill="#F47920" transform="translate(134,217)"/>
+<path d="M0 0 C2.97 0 5.94 0 9 0 C9 9.24 9 18.48 9 28 C14.61 28 20.22 28 26 28 C26 30.64 26 33.28 26 36 C17.42 36 8.84 36 0 36 C0 24.12 0 12.24 0 0 Z" fill="#F47920" transform="translate(681,217)"/>
+<path d="M0 0 C2.64 0 5.28 0 8 0 C8 9.24 8 18.48 8 28 C13.61 28 19.22 28 25 28 C25 30.64 25 33.28 25 36 C16.75 36 8.5 36 0 36 C0 24.12 0 12.24 0 0 Z" fill="#F47920" transform="translate(222,217)"/>
+<path d="M0 0 C3.625 1.313 3.625 1.313 6 3 C6.33 3.99 6.66 4.98 7 6 C5.563 8.688 5.563 8.688 4 11 C3.154 10.691 2.309 10.381 1.438 10.063 C-2.05 8.985 -5.382 8.434 -9 8 C-9 8.99 -9 9.98 -9 11 C-8.108 11.315 -7.216 11.629 -6.297 11.953 C-4.541 12.595 -4.541 12.595 -2.75 13.25 C-1.01 13.876 -1.01 13.876 .766 14.516 C4.031 16.014 5.845 17.146 8 20 C8.803 23.405 8.655 26.571 8 30 C5.473 33.346 3.961 34.68 0 36 C-7.276 36.801 -12.605 35.46 -19 32 C-19 30.68 -19 29.36 -19 28 C-16.5 25.75 -16.5 25.75 -14 24 C-13.34 24.495 -12.68 24.99 -12 25.5 C-8.034 27.483 -5.397 27.224 -1 27 C-1.33 26.01 -1.66 25.02 -2 24 C-4.914 22.631 -4.914 22.631 -8.375 21.5 C-16.078 18.835 -16.078 18.835 -18 16 C-18.69 12.61 -18.597 9.403 -18 6 C-12.854 -.636 -7.939 -.637 0 0 Z" fill="#F47920" transform="translate(360,217)"/>
+<path d="M0 0 C3.3 0 6.6 0 10 0 C11.173 3.102 12.338 6.206 13.5 9.313 C13.834 10.194 14.168 11.075 14.512 11.982 C14.828 12.83 15.143 13.678 15.469 14.551 C15.909 15.721 15.909 15.721 16.357 16.915 C17 19 17 19 17 22 C17.66 22 18.32 22 19 22 C19.227 20.783 19.454 19.566 19.688 18.313 C21.079 11.956 23.564 6.016 26 0 C28.97 0 31.94 0 35 0 C34.395 4.687 33.066 8.803 31.277 13.148 C30.88 14.135 30.88 14.135 30.475 15.141 C29.635 17.221 28.786 19.298 27.938 21.375 C27.363 22.793 26.79 24.211 26.217 25.629 C24.818 29.089 23.411 32.545 22 36 C19.36 36 16.72 36 14 36 C10.46 28.41 7.224 20.742 4.188 12.938 C3.781 11.907 3.374 10.876 2.955 9.814 C2.572 8.833 2.188 7.851 1.793 6.84 C1.275 5.515 1.275 5.515 .747 4.164 C0 2 0 2 0 0 Z" fill="#F47920" transform="translate(492,217)"/>
+<path d="M0 0 C3.625 1.313 3.625 1.313 6 3 C6.33 3.99 6.66 4.98 7 6 C5.563 8.688 5.563 8.688 4 11 C3.154 10.691 2.309 10.381 1.438 10.063 C-2.05 8.985 -5.382 8.434 -9 8 C-9 8.99 -9 9.98 -9 11 C-8.108 11.315 -7.216 11.629 -6.297 11.953 C-4.541 12.595 -4.541 12.595 -2.75 13.25 C-1.01 13.876 -1.01 13.876 .766 14.516 C4.031 16.014 5.845 17.146 8 20 C8.803 23.405 8.655 26.571 8 30 C5.473 33.346 3.961 34.68 0 36 C-7.276 36.801 -12.605 35.46 -19 32 C-19 30.68 -19 29.36 -19 28 C-16.5 25.75 -16.5 25.75 -14 24 C-13.34 24.495 -12.68 24.99 -12 25.5 C-8.034 27.483 -5.397 27.224 -1 27 C-1.33 26.01 -1.66 25.02 -2 24 C-4.914 22.631 -4.914 22.631 -8.375 21.5 C-16.078 18.835 -16.078 18.835 -18 16 C-18.69 12.61 -18.597 9.403 -18 6 C-12.854 -.636 -7.939 -.637 0 0 Z" fill="#F47920" transform="translate(303,217)"/>
+<path d="M0 0 C2.97 0 5.94 0 9 0 C9 9.24 9 18.48 9 28 C14.61 28 20.22 28 26 28 C26 30.64 26 33.28 26 36 C17.42 36 8.84 36 0 36 C0 24.12 0 12.24 0 0 Z" fill="#F47920" transform="translate(762,217)"/>
+</svg>
+</div>
 <div class="name">SHISHIR KAMBLE</div>
-<div class="role">Growth Manager</div>
+<div class="role">Growth Manager · Anarock</div>
 </div>
 </div>
 
-<div class="hb"><span class="dot"></span>Growth Strategy · Residential Mandate</div>
-<p class="hn">Presented by <strong>Shishir Kamble</strong> — Growth Manager</p>
+<div class="hb"><span class="dot"></span>AI-Powered Growth Strategy</div>
+<p class="hn">Presented by <strong>Shishir Kamble</strong> — Growth Manager, Anarock</p>
 <h1>The AI-Powered<br><span class="gt">Growth Engine</span></h1>
 <div class="tw"><div class="tt" id="tt"></div></div>
-<p class="hs">Unifying OpenCode Go, ChatGPT+, Gemini Pro, and Ralph Loop into a single devastatingly effective growth machine for Anarock's residential mandate vertical.</p>
+<p class="hs">How OpenCode Go, ChatGPT+, Gemini Pro, and Ralph Loop create an unfair advantage for Anarock's residential mandate vertical. One stack. Four engines. Infinite edge.</p>
 <div class="ha">
-<a href="#strategy" class="btn bp">Explore the Strategy →</a>
+<a href="#strategy" class="btn bp">See the Strategy →</a>
 <a href="#stack" class="btn bs">The Stack</a>
 </div>
 <div class="ab">
@@ -273,41 +243,40 @@ ANAROCK <span class="o">·</span> NEXUS
 <span class="l">Vertical</span><span class="v">Residential Mandate</span><span class="dv"></span>
 <span class="l">Stack</span><span class="v">OpenCode Go · ChatGPT+ · Gemini Pro · Ralph Loop</span>
 </div>
-<div class="tc" id="tc"><div class="tci">⚡ One stack to <strong>dominate the residential mandate</strong></div></div>
 </section>
 
 <section id="stack">
 <p class="sl rv">● Stack</p>
 <h2 class="st rv r1">The <span class="gt">Quad-Engine</span> Arsenal</h2>
-<p class="sd rv r2">Four premium subscriptions, one unified workflow.</p>
+<p class="sd rv r2">Four premium subscriptions, one unified workflow. Each engine brings a unique capability to Anarock's growth operations.</p>
 <div class="ss">
-<div class="sc2 rv r1"><div class="si" style="background:rgba(244,121,32,.12);color:#F47920"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h3>OpenCode Go</h3><p>AI coding agent with validated models. Builds automation pipelines and custom tools.</p></div>
-<div class="sc2 rv r2"><div class="si" style="background:rgba(58,90,140,.12);color:#4a7ab5"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>ChatGPT+</h3><p>GPT-4o generates hyper-personalized pitches and campaign content at scale.</p></div>
-<div class="sc2 rv r3"><div class="si" style="background:rgba(244,121,32,.12);color:#F47920"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 9 22 9 11 24 13 0 22 15 1 15 12 0 10 24"/></svg></div><h3>Gemini Pro</h3><p>1M+ token context. Analyzes competitors, market trends, thousands of listings.</p></div>
-<div class="sc2 rv r4"><div class="si" style="background:rgba(58,90,140,.12);color:#4a7ab5"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3>Ralph Loop</h3><p>Autonomous iterative loops for A/B testing and continuous improvement.</p></div>
+<div class="sc2 rv r1"><div class="si" style="background:rgba(244,121,32,.12);color:#F47920"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h3>OpenCode Go</h3><p>Builds automation pipelines, CRM connectors, and custom tools. The infrastructure layer.</p></div>
+<div class="sc2 rv r2"><div class="si" style="background:rgba(74,122,181,.12);color:#4a7ab5"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>ChatGPT+</h3><p>GPT-4o generates personalized pitches, marketing copy, and campaign content at scale.</p></div>
+<div class="sc2 rv r3"><div class="si" style="background:rgba(244,121,32,.12);color:#F47920"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 9 22 9 11 24 13 0 22 15 1 15 12 0 10 24"/></svg></div><h3>Gemini Pro</h3><p>1M+ token context. Analyzes competitors, market trends, and thousands of listings.</p></div>
+<div class="sc2 rv r4"><div class="si" style="background:rgba(74,122,181,.12);color:#4a7ab5"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3>Ralph Loop</h3><p>Autonomous iterative loops for A/B testing, campaign optimization, continuous improvement.</p></div>
 </div>
 </section>
 
 <section id="strategy">
 <p class="sl rv">● Strategy</p>
 <h2 class="st rv r1">Residential Mandate <span class="gt">Bullseye</span></h2>
-<p class="sd rv r2">Five strategic plays for the ground-level sales and marketing team.</p>
+<p class="sd rv r2">Five strategic plays that transform how the ground-level sales and marketing team operates.</p>
 <div class="stg">
-<div class="stc rv r1"><div class="nm">01</div><h3>Bullseye Targeting</h3><p>Enrich leads with demographic and behavioral data. Score and rank by mandate likelihood.</p><div class="im">25-35% increase in conversions</div></div>
-<div class="stc rv r2"><div class="nm">02</div><h3>Automated Lead Qualification</h3><p>AI-driven qualification via WhatsApp/email. Intent detection. Hot leads in minutes.</p><div class="im">3-5x lead processing capacity</div></div>
-<div class="stc rv r3"><div class="nm">03</div><h3>Personalized Pitch Generation</h3><p>Prospect profiles from public data. Tailored pitch decks and scripts. A/B testing.</p><div class="im">60-80% higher engagement</div></div>
-<div class="stc rv r4"><div class="nm">04</div><h3>Market Intelligence</h3><p>24/7 competitor tracking. Gemini Pro processes daily feeds. Threshold alerts.</p><div class="im">70% less manual research</div></div>
-<div class="stc rv r5"><div class="nm">05</div><h3>Content at Scale</h3><p>One source of truth feeds all channels. Localized. Quality pipeline. Performance loops.</p><div class="im">10-20x content output</div></div>
+<div class="stc rv r1"><div class="nm">01</div><h3>Bullseye Targeting</h3><p>Enrich leads with demographic, behavioral, and firmographic data. Score by mandate likelihood. Cut wasted time by 40-50%.</p><div class="im">25-35% higher conversion rates</div></div>
+<div class="stc rv r2"><div class="nm">02</div><h3>Automated Lead Qualification</h3><p>AI-driven qualification via WhatsApp and email. Intent detection. Hot leads to the right salesperson in minutes.</p><div class="im">3-5x lead processing capacity</div></div>
+<div class="stc rv r3"><div class="nm">03</div><h3>Personalized Pitch Generation</h3><p>Build prospect profiles from public data. Create tailored pitch decks, proposals, and scripts for every buyer.</p><div class="im">60-80% higher engagement</div></div>
+<div class="stc rv r4"><div class="nm">04</div><h3>Market Intelligence</h3><p>24/7 competitor tracking. Gemini Pro processes daily feeds. Ralph Loop manages threshold-based alerts.</p><div class="im">70% less manual research</div></div>
+<div class="stc rv r5"><div class="nm">05</div><h3>Content at Scale</h3><p>One source of truth feeds all channels. Localized. Quality pipeline. Performance-driven content loops.</p><div class="im">10-20x content output</div></div>
 </div>
 </section>
 
 <section id="roi">
 <p class="sl rv">● ROI</p>
 <h2 class="st rv r1">Measurable <span class="gt">Impact</span></h2>
-<p class="sd rv r2">Time savings, revenue impact, and implementation timelines.</p>
+<p class="sd rv r2">Concrete time savings, revenue impact, and implementation timelines for each use case.</p>
 <div class="tw2 rv r3">
 <table>
-<thead><tr><th>Use Case</th><th>Time Savings</th><th>Revenue Impact</th><th>Timeline</th></tr></thead>
+<thead><tr><th>Use Case</th><th>Time Saved</th><th>Revenue Impact</th><th>Timeline</th></tr></thead>
 <tbody>
 <tr><td>Lead Qualification</td><td>40 hrs/week</td><td>3-5x capacity</td><td>2-3 weeks</td></tr>
 <tr><td>Pitch Generation</td><td>15 hrs/week</td><td>30-40% higher closure</td><td>3-4 weeks</td></tr>
@@ -323,41 +292,40 @@ ANAROCK <span class="o">·</span> NEXUS
 <section id="roadmap">
 <p class="sl rv">● Roadmap</p>
 <h2 class="st rv r1">Implementation <span class="gt">Timeline</span></h2>
-<p class="sd rv r2">Four phases to full deployment in 8 weeks.</p>
+<p class="sd rv r2">Four phases to full deployment. From foundation to scale in 8 weeks.</p>
 <div class="rg">
-<div class="rc rv r1"><div class="ph">Phase 1</div><h3>Foundation</h3><ul><li>Set up OpenCode Go</li><li>Configure APIs</li><li>Build CRM connectors</li><li>Deploy Ralph Loop</li></ul></div>
-<div class="rc rv r2"><div class="ph" style="border-color:rgba(58,90,140,.15);background:rgba(58,90,140,.1);color:#4a7ab5">Phase 2</div><h3>Core Capabilities</h3><ul><li>Lead qualification</li><li>Personalized pitches</li><li>Market feeds</li><li>Content pipeline</li></ul></div>
+<div class="rc rv r1"><div class="ph">Phase 1</div><h3>Foundation</h3><ul><li>Set up OpenCode Go</li><li>Configure API access</li><li>Build CRM connectors</li><li>Deploy Ralph Loop</li></ul></div>
+<div class="rc rv r2"><div class="ph" style="border-color:rgba(74,122,181,.15);background:rgba(74,122,181,.1);color:#4a7ab5">Phase 2</div><h3>Core Capabilities</h3><ul><li>Lead qualification</li><li>Personalized pitches</li><li>Market intelligence</li><li>Content pipeline</li></ul></div>
 <div class="rc rv r3"><div class="ph">Phase 3</div><h3>Optimization</h3><ul><li>A/B testing loops</li><li>Competitor tracking</li><li>Auto reports</li><li>Team training</li></ul></div>
-<div class="rc rv r4"><div class="ph" style="border-color:rgba(58,90,140,.15);background:rgba(58,90,140,.1);color:#4a7ab5">Phase 4</div><h3>Scale</h3><ul><li>Additional verticals</li><li>Anarock-specific data</li><li>Custom dashboards</li><li>Continuous loops</li></ul></div>
+<div class="rc rv r4"><div class="ph" style="border-color:rgba(74,122,181,.15);background:rgba(74,122,181,.1);color:#4a7ab5">Phase 4</div><h3>Scale</h3><ul><li>Additional verticals</li><li>Anarock-specific data</li><li>Custom dashboards</li><li>Continuous loops</li></ul></div>
 </div>
 </section>
 
-<section class="ds" id="delta">
-<h2 class="rv">The <span class="gt">Delta Force</span> Advantage</h2>
-<p class="sd rv r1" style="margin:0 auto 36px;text-align:center">A small, highly-trained team with the best technology achieves what a force ten times its size cannot.</p>
+<section class="ds" id="about">
+<h2 class="rv">Why <span class="gt">Shishir Kamble</span></h2>
+<p class="sd rv r1" style="margin:0 auto 32px;text-align:center">The growth manager who can deploy this stack and deliver results for Anarock's BSM team.</p>
 <div class="vp rv r2">
-<div class="vi"><div class="vic">🎯</div><h4>Faster Response</h4><p>React in hours, not weeks</p></div>
-<div class="vi"><div class="vic">💬</div><h4>Deeper Personalization</h4><p>Every prospect feels like the only one</p></div>
-<div class="vi"><div class="vic">📊</div><h4>Smarter Allocation</h4><p>Maximum ROI deployment</p></div>
-<div class="vi"><div class="vic">🧠</div><h4>Data-Driven Decisions</h4><p>AI-powered intelligence</p></div>
-<div class="vi"><div class="vic">📈</div><h4>Higher Conversions</h4><p>Redefine what's possible</p></div>
+<div class="vi"><div class="vic">🎯</div><h4>Stack Mastery</h4><p>Deep expertise across all four AI engines</p></div>
+<div class="vi"><div class="vic">📊</div><h4>Data-Driven</h4><p>Every decision backed by AI intelligence</p></div>
+<div class="vi"><div class="vic">⚡</div><h4>Speed to Value</h4><p>8-week deployment, measurable ROI</p></div>
+<div class="vi"><div class="vic">🏠</div><h4>Domain Expert</h4><p>Residential mandate vertical specialist</p></div>
+<div class="vi"><div class="vic">🚀</div><h4>Execution Focus</h4><p>From strategy to results, no fluff</p></div>
 </div>
 </section>
 
 <section class="cta">
-<h2 class="rv">Ready to <span class="gt">Evolve</span>?</h2>
-<p class="rv r1">One terminal. Every model. Infinite potential.</p>
+<h2 class="rv">Ready to <span class="gt">Deploy</span>?</h2>
+<p class="rv r1">Let's build Anarock's AI-powered growth engine together.</p>
 <div class="ha rv r2">
-<a href="https://opencode.ai" target="_blank" class="btn bp">Install OpenCode →</a>
-<a href="https://github.com/anomalyco/opencode" target="_blank" class="btn bs">★ Star on GitHub</a>
+<a href="mailto:shishir.kamble@anarock.com" class="btn bp">Contact Shishir →</a>
+<a href="#stack" class="btn bs">Review the Stack</a>
 </div>
 </section>
 
 <footer>
-<div class="fl"><a href="https://opencode.ai/docs">Docs</a><a href="https://github.com/anomalyco/opencode">GitHub</a><a href="https://opencode.ai/discord">Discord</a><a href="https://www.anarock.com">Anarock</a></div>
+<div class="fl"><a href="https://www.anarock.com">Anarock</a><a href="https://opencode.ai">OpenCode</a></div>
 <p>NEXUS — AI Growth Engine for Anarock Property Consultants</p>
-<p style="margin-top:4px;font-size:11px">Built with opencode · go · chatgpt+ · gemini pro · ralph loop</p>
-<p style="margin-top:8px;font-size:10px;color:var(--text3)">Shishir Kamble — Growth Manager</p>
+<p style="margin-top:6px;font-size:10px;color:var(--text3)">Shishir Kamble — Growth Manager · Residential Mandate Vertical</p>
 </footer>
 </div>
 
@@ -365,63 +333,46 @@ ANAROCK <span class="o">·</span> NEXUS
 <button class="ct2" id="ct2">⌘</button>
 <div class="cpn" id="cpn">
 <input id="cs" placeholder="Type a command...">
-<div class="ci" data-a="stack">⚡ <span>View Stack</span><span class="ck">⌘1</span></div>
+<div class="ci" data-a="stack">⚡ <span>Stack</span><span class="ck">⌘1</span></div>
 <div class="ci" data-a="strategy">🎯 <span>Strategy</span><span class="ck">⌘2</span></div>
 <div class="ci" data-a="roi">📊 <span>ROI</span><span class="ck">⌘3</span></div>
 <div class="ci" data-a="roadmap">🛣️ <span>Roadmap</span><span class="ck">⌘4</span></div>
-<div class="ci" data-a="delta">⚔️ <span>Delta Force</span><span class="ck">⌘5</span></div>
-<div class="ci" data-a="top">↑ <span>Top</span><span class="ck">⌘↑</span></div>
+<div class="ci" data-a="about">👤 <span>About Shishir</span><span class="ck">⌘5</span></div>
 </div>
 </div>
 
 <script>
-const c=document.getElementById('pc'),cx=c.getContext('2d');
-let p=[],m={x:null,y:null},aid;
-function rs(){c.width=innerWidth;c.height=innerHeight}rs();
-addEventListener('resize',rs);
+const c=document.getElementById('pc'),cx=c.getContext('2d');let p=[],m={x:null,y:null},aid;
+function rs(){c.width=innerWidth;c.height=innerHeight}rs();addEventListener('resize',rs);
 addEventListener('mousemove',e=>{m.x=e.clientX;m.y=e.clientY});
 addEventListener('touchmove',e=>{const t=e.touches[0];m.x=t.clientX;m.y=t.clientY});
 class Pt{constructor(){this.reset()}reset(){this.x=Math.random()*c.width;this.y=Math.random()*c.height;this.size=Math.random()*2+.3;this.sx=(Math.random()-.5)*.3;this.sy=(Math.random()-.5)*.3;this.o=Math.random()*.4+.05}
 update(){this.x+=this.sx;this.y+=this.sy;if(this.x<0||this.x>c.width||this.y<0||this.y>c.height)this.reset();
 if(m.x){const dx=m.x-this.x,dy=m.y-this.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<100){const f=(100-dist)/100;this.x-=dx*f*.015;this.y-=dy*f*.015}}}
 draw(){cx.beginPath();cx.arc(this.x,this.y,this.size,0,Math.PI*2);cx.fillStyle=`rgba(244,121,32,${this.o})`;cx.fill()}}
-const pc=Math.min(80,Math.floor(c.width*c.height/14000));
+const pc=Math.min(70,Math.floor(c.width*c.height/16000));
 for(let i=0;i<pc;i++)p.push(new Pt);
-function cn(){for(let i=0;i<p.length;i++){for(let j=i+1;j<p.length;j++){const dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<120){const o=(1-dist/120)*.12;cx.beginPath();cx.moveTo(p[i].x,p[i].y);cx.lineTo(p[j].x,p[j].y);cx.strokeStyle=`rgba(244,121,32,${o})`;cx.lineWidth=.5;cx.stroke()}}}}
+function cn(){for(let i=0;i<p.length;i++){for(let j=i+1;j<p.length;j++){const dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<120){const o=(1-dist/120)*.1;cx.beginPath();cx.moveTo(p[i].x,p[i].y);cx.lineTo(p[j].x,p[j].y);cx.strokeStyle=`rgba(244,121,32,${o})`;cx.lineWidth=.5;cx.stroke()}}}}
 function ap(){cx.clearRect(0,0,c.width,c.height);p.forEach(x=>{x.update();x.draw()});cn();aid=requestAnimationFrame(ap)}ap();
-
-const nav=document.getElementById('nav');
-addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
-
-const mt=document.getElementById('mt'),nl=document.getElementById('nl');
-mt.addEventListener('click',()=>nl.classList.toggle('open'));
+const nav=document.getElementById('nav');addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+const mt=document.getElementById('mt'),nl=document.getElementById('nl');mt.addEventListener('click',()=>nl.classList.toggle('open'));
 nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nl.classList.remove('open')));
-
-const tt=document.getElementById('tt'),ph=['OpenCode Go · ChatGPT+ · Gemini Pro · Ralph Loop','One terminal. Four AIs. Infinite edge.','Residential mandate bullseye targeting','Content at 10x. Intelligence in real-time.','The Delta Force of real estate growth.'];
+const tt=document.getElementById('tt'),ph=['OpenCode Go · ChatGPT+ · Gemini Pro · Ralph Loop','Four engines. One stack. Infinite edge.','Residential mandate bullseye targeting','Content at 10x. Intelligence in real-time.','Built for Anarock\'s BSM team.'];
 let pi=0,ci=0,del=false,sp=60;
 function ty(){const cur=ph[pi];if(!del){tt.textContent=cur.slice(0,ci+1);ci++;if(ci===cur.length){sp=1800;del=true}else sp=40+Math.random()*40}else{tt.textContent=cur.slice(0,ci-1);ci--;if(ci===0){del=false;pi=(pi+1)%ph.length;sp=350}else sp=20+Math.random()*30}
 setTimeout(ty,sp)}ty();
-
 const rv=document.querySelectorAll('.rv'),ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('vi');ro.unobserve(en.target)}})},{threshold:.1});
 rv.forEach(el=>ro.observe(el));
-
-const tc=document.getElementById('tc');
-if(tc){const ti=tc.querySelector('.tci');tc.addEventListener('mousemove',e=>{const r=tc.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;ti.style.transform=`rotateX(${(y-r.height/2)/r.height*-10}deg) rotateY(${(x-r.width/2)/r.width*10}deg) scale3d(1.02,1.02,1.02)`});tc.addEventListener('mouseleave',()=>{ti.style.transform='rotateX(0deg) rotateY(0deg) scale3d(1,1,1)'})}
-
-const ctb=document.getElementById('ct2'),cpn=document.getElementById('cpn'),cs=document.getElementById('cs');
-let co=false;
+const ctb=document.getElementById('ct2'),cpn=document.getElementById('cpn'),cs=document.getElementById('cs');let co=false;
 ctb.addEventListener('click',()=>{co=!co;cpn.classList.toggle('open',co);if(co)setTimeout(()=>cs.focus(),100)});
 document.addEventListener('click',e=>{if(!e.target.closest('.cp')){cpn.classList.remove('open');co=false}});
 document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();ctb.click()}});
 cs.addEventListener('input',()=>{const q=cs.value.toLowerCase();cpn.querySelectorAll('.ci').forEach(i=>{i.style.display=i.textContent.toLowerCase().includes(q)?'flex':'none'})});
 cpn.querySelectorAll('.ci').forEach(i=>{i.addEventListener('click',()=>{const a=i.dataset.a;cpn.classList.remove('open');co=false;
-const map={stack:'stack',strategy:'strategy',roi:'roi',roadmap:'roadmap',delta:'delta'};
-if(a==='top')window.scrollTo({top:0,behavior:'smooth'});else if(map[a])document.getElementById(map[a]).scrollIntoView({behavior:'smooth'})})});
-
-document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.shiftKey){const map={'1':'stack','2':'strategy','3':'roi','4':'roadmap','5':'delta'},id=map[e.key];if(id){e.preventDefault();document.getElementById(id).scrollIntoView({behavior:'smooth'})}}});
-
-let rt;
-addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{cancelAnimationFrame(aid);const nc=Math.min(80,Math.floor(c.width*c.height/14000));if(nc!==p.length){if(nc>p.length)while(p.length<nc)p.push(new Pt);else p.length=nc}ap()},300)});
+const map={stack:'stack',strategy:'strategy',roi:'roi',roadmap:'roadmap',about:'about'};
+if(map[a])document.getElementById(map[a]).scrollIntoView({behavior:'smooth'})})});
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.shiftKey){const map={'1':'stack','2':'strategy','3':'roi','4':'roadmap','5':'about'},id=map[e.key];if(id){e.preventDefault();document.getElementById(id).scrollIntoView({behavior:'smooth'})}}});
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{cancelAnimationFrame(aid);const nc=Math.min(70,Math.floor(c.width*c.height/16000));if(nc!==p.length){if(nc>p.length)while(p.length<nc)p.push(new Pt);else p.length=nc}ap()},300)});
 </script>
 </body>
 </html>

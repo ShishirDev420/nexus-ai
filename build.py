@@ -375,8 +375,6 @@ section{{padding:60px 16px}}.hero{{padding:100px 16px 40px;min-height:90vh}}.her
 /* ─── THREE.JS SCENE ─── */
 import * as THREE from 'three';
 
-document.documentElement.classList.add('animate');
-
 const canvas = document.getElementById('three-canvas');
 const scene = new THREE.Scene();
 scene.background = null;
@@ -588,6 +586,11 @@ requestAnimationFrame(() => ro.unobserve?.(canvas.parentElement));
 ro.observe(canvas.parentElement);
 animate();
 
+const motionReady = window.gsap && window.ScrollTrigger && window.Lenis;
+
+if (motionReady) {{
+document.documentElement.classList.add('animate');
+
 /* ─── LENIS ─── */
 const lenis = new Lenis({{duration:1.15,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)),orientation:'vertical',smoothWheel:true}});
 lenis.on('scroll',ScrollTrigger.update);
@@ -634,6 +637,10 @@ ht.set('#heroBadge,#heroTitle,#heroSub,#heroDesc,#heroActions,#heroPlatform',{{o
 
 /* ─── COUNTERS ─── */
 document.querySelectorAll('.counter').forEach(c=>ScrollTrigger.create({{trigger:c,start:'top 92%',onEnter:()=>{{const t=parseInt(c.dataset.target);let n=0;const i=setInterval(()=>{{const s=Math.min(++n/30,1);c.textContent=Math.round((1-Math.pow(1-s,3))*t);if(s>=1)clearInterval(i)}},30)}},once:true}}));
+}} else {{
+document.querySelectorAll('.counter').forEach(c=>{{c.textContent=c.dataset.target}});
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{{const h=a.getAttribute('href');const t=h&&document.getElementById(h.slice(1));if(t){{e.preventDefault();t.scrollIntoView({{behavior:'smooth',block:'start'}})}}}}));
+}}
 
 console.log('Anarock — The Growth Loop · Built with Ralph Loop');
 </script>

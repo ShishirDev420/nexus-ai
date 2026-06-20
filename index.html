@@ -180,6 +180,13 @@ footer .fp2{margin-top:4px;font-size:10px;color:var(--text-muted);letter-spacing
 .reveal-3{transition-delay:.24s!important}.reveal-4{transition-delay:.32s!important}
 .reveal-5{transition-delay:.4s!important}
 
+/* Fail-open visibility: if JS or CDN imports fail, content must still render. */
+.hero-badge,.hero h1,.hero-sub,.hero-desc,.hero-actions,.hero-platform,.section-label,.section-title,.section-desc,.stats-grid,.loop-cycle,.stack-card,.strategy-card,.table-wrap,.about-card{opacity:1}
+.reveal{opacity:1!important;transform:none!important}
+.animate .hero-badge,.animate .hero h1,.animate .hero-sub,.animate .hero-desc,.animate .hero-actions,.animate .hero-platform,.animate .section-label,.animate .section-title,.animate .section-desc,.animate .stats-grid,.animate .loop-cycle,.animate .stack-card,.animate .strategy-card,.animate .table-wrap,.animate .about-card{opacity:0}
+.animate .reveal{opacity:0!important;transform:translateY(28px)!important}
+.animate .reveal.visible{opacity:1!important;transform:translateY(0)!important}
+
 /* ─── RESPONSIVE ─── */
 @media(max-width:900px){nav{padding:16px 24px}nav.scrolled{padding:12px 24px}.nav-links{gap:24px}.stats-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){#cursor{display:none}nav{padding:12px 16px}.nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(247,243,238,.98);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);flex-direction:column;padding:20px;gap:16px;border-bottom:1px solid var(--border)}
@@ -358,9 +365,11 @@ section{padding:60px 16px}.hero{padding:100px 16px 40px;min-height:90vh}.hero-pl
 <p class="fp2">Shishir Kamble — Growth Manager · Residential Mandate Vertical</p>
 </footer>
 
-<script>
+<script type="module">
 /* ─── THREE.JS SCENE ─── */
 import * as THREE from 'three';
+
+document.documentElement.classList.add('animate');
 
 const canvas = document.getElementById('three-canvas');
 const scene = new THREE.Scene();
